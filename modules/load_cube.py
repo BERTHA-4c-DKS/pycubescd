@@ -87,6 +87,10 @@ class cube:
       return self.__data
 
 
+  def set_data(self, newd):
+      self.__data = newd
+
+
   def get_origin(self):
       return self.__origin
 
