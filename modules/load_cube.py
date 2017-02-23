@@ -58,53 +58,58 @@ class cube(object):
       self.__z = numpy.zeros((1,1,1))
 
       if fname != "":
+          self.readfile(fname)
 
-        f = open(fname, 'r')
+  def readfile (self, fname):
+
+      self.clear()
+      
+      f = open(fname, 'r')
+      
+      for i in range(2): 
+          f.readline() 
+      
+      line = f.readline().split() 
+      self.__natoms = int(line[0])
+      self.__origin = numpy.array([float(line[1]), \
+          float(line[2]), \
+          float(line[3])]) 
+      
+      line = f.readline().split() 
+      self.__nx = int(line[0])
+      self.__x = numpy.array([float(line[1]), \
+              float(line[2]), \
+              float(line[3])])
+      
+      line = f.readline().split() 
+      self.__ny = int(line[0])
+      self.__y = numpy.array([float(line[1]), \
+              float(line[2]), \
+              float(line[3])])
+      
+      line = f.readline().split() 
+      self.__nz = int(line[0])
+      self.__z = numpy.array([float(line[1]), \
+              float(line[2]), \
+              float(line[3])])
+      
+      for i in range(self.__natoms):
+          line = f.readline().split()
+          a = atom(int(line[0]), float(line[1]),  float(line[2]), \
+                float(line[3]),  float(line[4]))
+          self.__atoms.append(a)
         
-        for i in range(2): 
-            f.readline() 
-        
-        line = f.readline().split() 
-        self.__natoms = int(line[0])
-        self.__origin = numpy.array([float(line[1]), \
-            float(line[2]), \
-            float(line[3])]) 
-        
-        line = f.readline().split() 
-        self.__nx = int(line[0])
-        self.__x = numpy.array([float(line[1]), \
-                float(line[2]), \
-                float(line[3])])
-        
-        line = f.readline().split() 
-        self.__ny = int(line[0])
-        self.__y = numpy.array([float(line[1]), \
-                float(line[2]), \
-                float(line[3])])
-        
-        line = f.readline().split() 
-        self.__nz = int(line[0])
-        self.__z = numpy.array([float(line[1]), \
-                float(line[2]), \
-                float(line[3])])
-        
-        for i in range(self.__natoms):
-            line = f.readline().split()
-            a = atom(int(line[0]), float(line[1]),  float(line[2]), \
-                  float(line[3]),  float(line[4]))
-            self.__atoms.append(a)
-          
-        self.__data = numpy.zeros((self.__nx,self.__ny,self.__nz))
-        i = 0
-        for s in f:
-            for v in s.split():
-                self.__data[i/(self.__ny * self.__nz), \
-                    (i/self.__nz)%self.__ny, \
-                    i % self.__nz] = float(v)
-                i += 1
-        
-        if i != self.__nx * self.__ny * self.__nz: 
-            raise SizeError, "Errore while reading cube file"
+      self.__data = numpy.zeros((self.__nx,self.__ny,self.__nz))
+      i = 0
+      for s in f:
+          for v in s.split():
+              self.__data[i/(self.__ny * self.__nz), \
+                  (i/self.__nz)%self.__ny, \
+                  i % self.__nz] = float(v)
+              i += 1
+      
+      if i != self.__nx * self.__ny * self.__nz: 
+          raise SizeError, "Errore while reading cube file"
 
 
   def clear(self):
@@ -181,20 +186,59 @@ class cube(object):
   def get_z(self):
       return self.__z
 
+  def cdy (self):
+      cd = []
+
+      ymin = self.get_origin()[1]
+      dy = self.get_dy()
+      vals = self.integrate("y")
+      i = 0
+      for v in vals:
+          cd.append([ymin+i*dy, numpy.sum( vals[:i] ) * dy, v])
+          i = i + 1
+      
+      return cd
+
+  def cdx (self):
+      cd = []
+
+      xmin = self.get_origin()[0]
+      dx = self.get_dx()
+      vals = self.integrate("x")
+      i = 0
+      for v in vals:
+          cd.append([xmin+i*dx, numpy.sum( vals[:i] ) * dx, v])
+          i = i + 1
+      
+      return cd
+
+  def cdz (self):
+      cd = []
+
+      zmin = self.get_origin()[2]
+      dz = self.get_dz()
+      vals = self.integrate("z")
+      i = 0
+      for v in vals:
+          cd.append([xmin+i*dz, numpy.sum( vals[:i] ) * dz, v])
+          i = i + 1
+      
+      return cd
+
   def integrate (self, axis=""):
 
       if axis == "":
           itgr = numpy.sum(self.__data) * self.get_dx() * self.get_dy() * \
                   self.get_dz()
           return itgr
-      elif axis == "xy":
+      elif axis == "z":
           itgr = numpy.sum(self.__data, axis=(0,1)) * self.get_dx() * self.get_dy()
           return itgr
-      elif axis == "yz":
+      elif axis == "x":
           itgr = numpy.sum(self.__data, axis=(1,2)) * self.get_dy() * self.get_dz()
           return itgr
-      elif axis == "xz":
-          itgr = numpy.sum(self.__data, axis=(0,2)) * self.get_dx() * self.get_dy()
+      elif axis == "y":
+          itgr = numpy.sum(self.__data, axis=(0,2)) * self.get_dx() * self.get_dz()
           return itgr
 
       return None
@@ -229,6 +273,38 @@ class cube(object):
       
       return str
 
+  def __add__ (self, b):
+
+      if (self.get_nx() != b.get_nx()) or (self.get_ny() != b.get_ny()) or \
+         (self.get_nz() != b.get_nz()) or (self.get_dx() != b.get_dx()) or \
+         (self.get_dy() != b.get_dy()) or (self.get_dz() != b.get_dz()) or \
+         (self.get_origin()[0] != b.get_origin()[0]) or \
+         (self.get_origin()[1] != b.get_origin()[1]) or \
+         (self.get_origin()[2] != b.get_origin()[2]):
+        raise SizeError, "cubes are not compatible"
+      
+      retc = cube()
+
+      retc.set_origin(self.get_origin()[0], self.get_origin()[1], \
+              self.get_origin()[2])
+
+      retc.set_atoms(self.__atoms)
+
+      newd = self.get_data()
+
+      for ix in xrange(self.__nx):
+          for iy in xrange(self.__ny):
+              for iz in xrange(self.__nz):
+                   newd[ix,iy,iz] += b.get_data()[ix,iy,iz] 
+
+      retc.set_data(newd)
+
+      retc.set_x(self.get_x())
+      retc.set_y(self.get_y())
+      retc.set_z(self.get_z())
+
+      return retc
+
   def __sub__ (self, b):
 
       if (self.get_nx() != b.get_nx()) or (self.get_ny() != b.get_ny()) or \
@@ -252,6 +328,39 @@ class cube(object):
           for iy in xrange(self.__ny):
               for iz in xrange(self.__nz):
                    newd[ix,iy,iz] -= b.get_data()[ix,iy,iz] 
+
+      retc.set_data(newd)
+
+      retc.set_x(self.get_x())
+      retc.set_y(self.get_y())
+      retc.set_z(self.get_z())
+
+      return retc
+
+  def __mul__ (self, b):
+
+      if (self.get_nx() != b.get_nx()) or (self.get_ny() != b.get_ny()) or \
+         (self.get_nz() != b.get_nz()) or (self.get_dx() != b.get_dx()) or \
+         (self.get_dy() != b.get_dy()) or (self.get_dz() != b.get_dz()) or \
+         (self.get_origin()[0] != b.get_origin()[0]) or \
+         (self.get_origin()[1] != b.get_origin()[1]) or \
+         (self.get_origin()[2] != b.get_origin()[2]):
+        raise SizeError, "cubes are not compatible"
+      
+      retc = cube()
+
+      retc.set_origin(self.get_origin()[0], self.get_origin()[1], \
+              self.get_origin()[2])
+
+      retc.set_atoms(self.__atoms)
+
+      newd = self.get_data()
+
+      for ix in xrange(self.__nx):
+          for iy in xrange(self.__ny):
+              for iz in xrange(self.__nz):
+                   newd[ix,iy,iz] = a.get_data()[ix,iy,iz] * \
+                           b.get_data()[ix,iy,iz] 
 
       retc.set_data(newd)
 
