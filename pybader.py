@@ -1,5 +1,9 @@
-import cubes 
+import sys
+import numpy
 import argparse
+
+sys.path.append("./modules")
+import load_cube
 
 """
 Used to evaluate the partial integral of an integrand in cube format on
@@ -23,23 +27,23 @@ if args.verbosity:
 
 
 print('Reading...' + args.file)
-totcube = cubes.cube()
-totcube.read(args.file)
+totcube = load_cube.cube()
+totcube.readfile (args.file)
 
 print('Reading...' + args.filebader)
-badercube = cubes.cube()
-badercube.read(args.filebader)
+badercube = load_cube.cube()
+badercube.readfile (args.filebader)
 
+dv = totcube.get_dx() * totcube.get_dy() * totcube.get_dz()
 
-
-dv = totcube.step_1[0]*totcube.step_2[1]*totcube.step_3[2]
-
-s = 0.
-for i in range(len(totcube.data)) :
-    if (badercube.data[i] > 0.0000000001) :
-       s += totcube.data[i]
+s = 0.0
+for i in range(totcube.get_nx()):
+    for j in range(totcube.get_ny()):
+        for k in range(totcube.get_nz()):
+            if (badercube.get_data()[i,j,k] > 0.0000000001) :
+                s += totcube.get_data()[i,j,k]
 
 print(s*dv)
-print(sum(totcube.data)*dv)
+print(numpy.sum(totcube.get_data())*dv)
 
 exit()
