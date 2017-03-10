@@ -186,6 +186,15 @@ class cube(object):
   def get_z(self):
       return self.__z
 
+  def cd (self, ax = "x"):
+
+      if ax == "z":
+          return self.cdz()
+      elif ax == "x":
+          return self.cdx()
+      elif ax == "y":
+          return self.cdy()
+ 
   def cdy (self):
       cd = []
 
@@ -220,7 +229,7 @@ class cube(object):
       vals = self.integrate("z")
       i = 0
       for v in vals:
-          cd.append([xmin+i*dz, numpy.sum( vals[:i] ) * dz, v])
+          cd.append([zmin+i*dz, numpy.sum( vals[:i] ) * dz, v])
           i = i + 1
       
       return cd
