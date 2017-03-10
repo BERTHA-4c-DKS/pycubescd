@@ -391,6 +391,65 @@ class cube(object):
       print >> f, "cube file\ngenerated"
       print >> f, self.get_str()
 
+  def to_xyz (self, fname = "toXYZ.out"):
+
+      temp = numpy.reshape(self.data,(self.n_1,self.n_2,self.n_3),order='C')
+  
+      x = []
+      y = []
+      z = []
+      for i in range(self.n_1):
+         for j in range(self.n_2): 
+            for k in range(self.n_3):
+                x.append(self.origin[0]+ i*self.step_1[0])
+                y.append(self.origin[1]+ j*self.step_2[1]) 
+                z.append(self.origin[2]+ k*self.step_3[2]) 
+                ss = x,y,z,self.data 
+                aa = numpy.transpose(ss)
+
+      numpy.savetxt(fname, aa, fmt='%e', newline='\n')
+  
+  def get_grid_xyz(self):
+
+      x = []
+      y = []
+      z = []
+
+      for i in range(self.n_1):
+          x.append(self.origin[0]+ i*self.step_1[0])
+
+      for j in range(self.n_2):
+          y.append(self.origin[1]+ j*self.step_2[1])
+
+      for k in range(self.n_3):
+          z.append(self.origin[2]+ k*self.step_3[2])
+
+      return x, y, z
+
+  def spherical_int(self, center, diameter):
+
+      x = []
+      y = []
+      z = []
+      dist =[]
+      for i in range(self.n_1):
+         for j in range(self.n_2): 
+            for k in range(self.n_3):
+                x = self.origin[0]+ i*self.step_1[0]
+                y = self.origin[1]+ j*self.step_2[1] 
+                z = self.origin[2]+ k*self.step_3[2] 
+                tmp2 = (x - center[0])**2 + (y - center[1])**2 + (z - center[2])**2 
+                dist.append(math.sqrt(tmp2)) 
+
+      dv = self.step_1[0]*self.step_2[1]*self.step_3[2]
+      
+      partsum = 0.
+      for i in range(len(self.data)) :
+          if (dist[i] < diameter):    
+            partsum += self.data[i]
+
+      return partsum*dv
+
   def mask_sphere(self, r, cx, cy, cz):
       # cut a sphere with radius r and center in [cx,cy,cz]
       
