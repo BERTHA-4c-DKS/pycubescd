@@ -1,7 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np 
-import cubes 
 import argparse
+import sys
+
+sys.path.append("./modules")
+import load_cube
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f","--file", help="cube format file to perform CD", type=str)
@@ -21,8 +24,8 @@ if (args.axis != 'Z' and args.axis != 'Y' and args.axis != 'X'):
    print('Problem with the axis definition, we set it to the default Z value.')
 
 print('Reading...' + args.file)
-mycube = cubes.cube()
-mycube.read(args.file)
+mycube = load_cube.cube()
+mycube.readfile (args.file)
 
 if   (args.axis == 'X'):
      cddata = mycube.cdx('cdx.out')
@@ -66,8 +69,11 @@ exit()
 
 import matplotlib.pyplot as plt
 import numpy as np 
-import cubes 
 import argparse
+
+sys.path.append("./modules")
+import load_cube
+
 from scipy.interpolate import RegularGridInterpolator
 from scipy.interpolate import interp1d
 from scipy.optimize import newton
@@ -93,8 +99,8 @@ if (args.axis != 'Z' and args.axis != 'Y' and args.axis != 'X'):
    print('Problem with the axis definition, we set it to the default Z value.')
 
 print('Reading...' + args.filefrag1)
-mycube = cubes.cube()
-mycube.read(args.filefrag1)
+mycube = load_cube.cube()
+mycube.readfile(args.filefrag1)
 x,y,z = np.array(mycube.get_grid_xyz())
 
 data = np.reshape(mycube.data,(mycube.n_1,mycube.n_2,mycube.n_3),order='C')
@@ -133,10 +139,10 @@ pts = np.transpose([xpt1,xpt2,xpt3])
 y1 = my_interpolating_function(pts)
 
 print('Reading...' + args.filefrag2)
-mycube = cubes.cube()
-mycube.read(args.filefrag2)
+mycube = load_cube.cube()
+mycube.readfile(args.filefrag2)
 x,y,z = np.array(mycube.get_grid_xyz())
-data = np.reshape(mycube.data,(mycube.n_1,mycube.n_2,mycube.n_3),order='C')
+data = mycube.get_data()
 
 print('Interpolating...' + args.filefrag2)
 my_interpolating_function = RegularGridInterpolator((x,y,z),data, method ='linear')
