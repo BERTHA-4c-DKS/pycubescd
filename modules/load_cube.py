@@ -2,6 +2,7 @@ import numpy
 import math
 
 class atom(object): 
+
   def __init__(self, zin, charge, x, y, z):
     self.__z = zin
     self.__coordinates = (x, y, z)
