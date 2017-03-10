@@ -393,18 +393,19 @@ class cube(object):
 
   def to_xyz (self, fname = "toXYZ.out"):
 
-      temp = numpy.reshape(self.data,(self.n_1,self.n_2,self.n_3),order='C')
+      temp = numpy.reshape(self.__data, \
+              (self.__nx*self.__ny*self.__nz), order='C')
   
       x = []
       y = []
       z = []
-      for i in range(self.n_1):
-         for j in range(self.n_2): 
-            for k in range(self.n_3):
-                x.append(self.origin[0]+ i*self.step_1[0])
-                y.append(self.origin[1]+ j*self.step_2[1]) 
-                z.append(self.origin[2]+ k*self.step_3[2]) 
-                ss = x,y,z,self.data 
+      for i in range(self.__nx):
+         for j in range(self.__ny): 
+            for k in range(self.__nz):
+                x.append(self.__origin[0] + i * self.__x[0])
+                y.append(self.__origin[1] + j * self.__y[1]) 
+                z.append(self.__origin[2] + k * self.__z[2]) 
+                ss = x, y, z, temp
                 aa = numpy.transpose(ss)
 
       numpy.savetxt(fname, aa, fmt='%e', newline='\n')
@@ -415,14 +416,14 @@ class cube(object):
       y = []
       z = []
 
-      for i in range(self.n_1):
-          x.append(self.origin[0]+ i*self.step_1[0])
+      for i in range(self.__nx):
+          x.append(self.__origin[0] + i * self.__x[0])
 
-      for j in range(self.n_2):
-          y.append(self.origin[1]+ j*self.step_2[1])
+      for j in range(self.__ny):
+          y.append(self.__origin[1] + j * self.__y[1])
 
-      for k in range(self.n_3):
-          z.append(self.origin[2]+ k*self.step_3[2])
+      for k in range(self.__nz):
+          z.append(self.__origin[2] + k * self.__z[2])
 
       return x, y, z
 
@@ -431,24 +432,28 @@ class cube(object):
       x = []
       y = []
       z = []
-      dist =[]
-      for i in range(self.n_1):
-         for j in range(self.n_2): 
-            for k in range(self.n_3):
-                x = self.origin[0]+ i*self.step_1[0]
-                y = self.origin[1]+ j*self.step_2[1] 
-                z = self.origin[2]+ k*self.step_3[2] 
+      dist = []
+      for i in range(self.__nx):
+         for j in range(self.__ny): 
+            for k in range(self.__nz):
+                x = self.__origin[0] + i * self.__x[0]
+                y = self.__origin[1] + j * self.__y[1] 
+                z = self.__origin[2] + k * self.__z[2] 
                 tmp2 = (x - center[0])**2 + (y - center[1])**2 + (z - center[2])**2 
                 dist.append(math.sqrt(tmp2)) 
 
-      dv = self.step_1[0]*self.step_2[1]*self.step_3[2]
+      dv = self.__x[0] * self.__y[1] * self.__z[2]
       
-      partsum = 0.
-      for i in range(len(self.data)) :
-          if (dist[i] < diameter):    
-            partsum += self.data[i]
+      summa = 0.0
+      a = 0
+      for i in range(self.__nx):
+         for j in range(self.__ny): 
+            for k in range(self.__nz):
+                if (dist[a] < diameter):    
+                    summa += self.__data[i,j,k]
+                a = a + 1
 
-      return partsum*dv
+      return summa * dv
 
   def mask_sphere(self, r, cx, cy, cz):
       # cut a sphere with radius r and center in [cx,cy,cz]
