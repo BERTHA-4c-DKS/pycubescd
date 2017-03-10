@@ -25,9 +25,9 @@ cube = cubeA - cubeB
 
 ymin = cube.get_origin()[1]
 dy = cube.get_dy()
-#vals = cube.integrate("xy") # z 
+#vals = cube.integrate("z") # z 
 vals = cube.integrate("y") # y
-#vals = cube.integrate("yz") # x 
+#vals = cube.integrate("x") # x 
 i = 0
 xv = []
 cd = []
