@@ -1,12 +1,15 @@
 import matplotlib.pyplot as plt
 import numpy as np 
-import cubes 
 import argparse
 from scipy.interpolate import RegularGridInterpolator
 from scipy.interpolate import interp1d
 from scipy.optimize import newton
 from scipy.optimize import fmin 
 
+import sys
+
+sys.path.append("./modules")
+import load_cube
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f1",   "--filefrag1", help="cube format file of molecular fragment 1", type=str, required=True)
@@ -14,6 +17,11 @@ parser.add_argument("-f2",   "--filefrag2", help="cube format file of molecular 
 parser.add_argument("-o_iso","--outputiso",  help="Output file name", type=str, default="stdout")
 parser.add_argument("-axis", help="Specify the axis on which evaluating the isodensity value [X,Y,Z]", type=str, default="Z")
 parser.add_argument("--verbosity", help="increase output verbosity",action="store_true")
+
+if len(sys.argv) == 1:
+    parser.print_help()
+    exit(1)
+
 args = parser.parse_args()
 #print(args.file)
 #parser.print_help()
@@ -27,11 +35,11 @@ if (args.axis != 'Z' and args.axis != 'Y' and args.axis != 'X'):
    print('Problem with the axis definition, we set it to the default Z value.')
 
 print('Reading...' + args.filefrag1)
-mycube = cubes.cube()
-mycube.read(args.filefrag1)
+mycube = load_cube.cube()
+mycube.readfile(args.filefrag1)
 x,y,z = np.array(mycube.get_grid_xyz())
 
-data = np.reshape(mycube.data,(mycube.n_1,mycube.n_2,mycube.n_3),order='C')
+data = mycube.get_data()
 
 # This is for fixing the range of sampling point (info arises from the cube grid)
 nump = 1000   # Fix number of sampling points
@@ -67,10 +75,10 @@ pts = np.transpose([xpt1,xpt2,xpt3])
 y1 = my_interpolating_function(pts)
 
 print('Reading...' + args.filefrag2)
-mycube = cubes.cube()
-mycube.read(args.filefrag2)
+mycube = load_cube.cube()
+mycube.readfile(args.filefrag2)
 x,y,z = np.array(mycube.get_grid_xyz())
-data = np.reshape(mycube.data,(mycube.n_1,mycube.n_2,mycube.n_3),order='C')
+data = mycube.get_data()
 
 print('Interpolating...' + args.filefrag2)
 my_interpolating_function = RegularGridInterpolator((x,y,z),data, method ='linear')
