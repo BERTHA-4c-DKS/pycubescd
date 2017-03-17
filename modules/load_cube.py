@@ -1,5 +1,6 @@
 import numpy 
 import math
+import os
 
 class atom(object): 
 
@@ -187,16 +188,16 @@ class cube(object):
   def get_z(self):
       return self.__z
 
-  def cd (self, ax = "x"):
+  def cd (self, ax = "x", fname=""):
 
       if ax == "z":
-          return self.cdz()
+          return self.cdz(fname)
       elif ax == "x":
-          return self.cdx()
+          return self.cdx(fname)
       elif ax == "y":
-          return self.cdy()
+          return self.cdy(fname)
  
-  def cdy (self):
+  def cdy (self, fname=""):
       cd = []
 
       ymin = self.get_origin()[1]
@@ -206,10 +207,21 @@ class cube(object):
       for v in vals:
           cd.append([ymin+i*dy, numpy.sum( vals[:i] ) * dy, v])
           i = i + 1
+
+      if fname != "":
+         if os.path.exists(fname):
+             os.remove(fname)
+
+         f = open(fname,'w')
+
+         for i in cd:
+             f.write(('%e %e %e \n') % (i[0], i[1], i[2]))
+
+         f.close()
       
       return cd
 
-  def cdx (self):
+  def cdx (self, fname=""):
       cd = []
 
       xmin = self.get_origin()[0]
@@ -219,10 +231,21 @@ class cube(object):
       for v in vals:
           cd.append([xmin+i*dx, numpy.sum( vals[:i] ) * dx, v])
           i = i + 1
-      
+
+      if fname != "":
+         if os.path.exists(fname):
+             os.remove(fname)
+
+         f = open(fname,'w')
+
+         for i in cd:
+             f.write(('%e %e %e \n') % (i[0], i[1], i[2]))
+
+         f.close()
+       
       return cd
 
-  def cdz (self):
+  def cdz (self, fname=""):
       cd = []
 
       zmin = self.get_origin()[2]
@@ -232,7 +255,18 @@ class cube(object):
       for v in vals:
           cd.append([zmin+i*dz, numpy.sum( vals[:i] ) * dz, v])
           i = i + 1
-      
+
+      if fname != "":
+         if os.path.exists(fname):
+             os.remove(fname)
+
+         f = open(fname,'w')
+
+         for i in cd:
+             f.write(('%e %e %e \n') % (i[0], i[1], i[2]))
+
+         f.close()
+       
       return cd
 
   def integrate (self, axis=""):
