@@ -28,18 +28,18 @@ if args.verbosity:
 
 print('Reading...' + args.file[0])
 totcube = load_cube.cube()
-totcube.read(args.file[0])
+totcube.readfile(args.file[0])
 
 print('Reading...' + args.file[1])
 frag1cube = load_cube.cube()
-frag1cube.read(args.file[1])
+frag1cube.readfile(args.file[1])
 
 print('Reading...' + args.file[2])
 frag2cube = load_cube.cube()
-frag2cube.read(args.file[2])
+frag2cube.readfile(args.file[2])
 
 print('Coping temp data...')
-tmpdata = copy.copy(totcube.data)
+tmpdata = copy.copy(totcube.data())
 
 dv = totcube.step_1[0]*totcube.step_2[1]*totcube.step_3[2]
 
@@ -59,7 +59,4 @@ print('Electronic Charge on frag2', partsum*dv)
 
 print('Expected error due to cube sampling', totcube.integrate())
 
-
-
 sys.exit()
-

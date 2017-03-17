@@ -54,6 +54,7 @@ class cube(object):
       self.__ny = 0
       self.__nz = 0
       self.__data = numpy.zeros((1,1,1))
+      self.__rawdata = []
       self.__origin = numpy.zeros((1,1,1))
       self.__x = numpy.zeros((1,1,1))
       self.__y = numpy.zeros((1,1,1))
@@ -105,6 +106,7 @@ class cube(object):
       i = 0
       for s in f:
           for v in s.split():
+              self.__rawdata.append(float(v)) 
               self.__data[i/(self.__ny * self.__nz), \
                   (i/self.__nz)%self.__ny, \
                   i % self.__nz] = float(v)
@@ -121,6 +123,7 @@ class cube(object):
       self.__ny = 0
       self.__nz = 0
       self.__data = numpy.zeros((1,1,1))
+      self.__rawdata.clear()
       self.__origin = numpy.zeros((1,1,1))
       self.__x = numpy.zeros((1,1,1))
       self.__y = numpy.zeros((1,1,1))
