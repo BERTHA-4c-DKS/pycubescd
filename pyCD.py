@@ -5,7 +5,6 @@ import sys
 
 sys.path.append("./modules")
 import load_cube
-import utility
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f","--file", help="cube format file to perform CD", type=str)
