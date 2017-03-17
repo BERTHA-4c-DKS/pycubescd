@@ -5,16 +5,21 @@ import sys
 
 sys.path.append("./modules")
 import load_cube
+import utility
 
 parser = argparse.ArgumentParser()
 parser.add_argument("-f","--file", help="cube format file to perform CD", type=str)
 parser.add_argument("-axis", help="Specify the axis on which evaluating CD. Choose among [X,Y,Z]", type=str, default="Z")
-parser.add_argument("-iso","--isodensitypoint", help="This is a float determining the isodensty point along a chosen axis. An interpolation procedure is used.", type=float)
+parser.add_argument("-iso","--isodensitypoint", \
+        help="This is a float determining the isodensty point along a chosen axis. "\
+        "An interpolation procedure is used.", type=float)
 parser.add_argument("--verbosity", help="increase output verbosity",action="store_true")
+
+if len(sys.argv) == 1:
+    parser.print_help()
+    exit(1)
+
 args = parser.parse_args()
-#print(args.file)
-#parser.print_help()
-#print(len(args.addcubes))
 
 if args.verbosity:
    print("verbosity turned on")  

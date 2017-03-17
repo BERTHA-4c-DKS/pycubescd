@@ -1,8 +1,12 @@
 import matplotlib.pyplot as plt
 import numpy as np 
-import cubes 
 import argparse
 import copy 
+import sys
+
+sys.path.append("./modules")
+import load_cube
+
 
 """
 Generalized the idea of the isodensity: spatial grid is assegned tyo fragment 1 or 2 
