@@ -16,25 +16,26 @@ depending on their relative density value.
 parser = argparse.ArgumentParser()
 parser.add_argument("-f","--file", help="3 cube format files: tot frag1 frag2", type=str, nargs=3)
 parser.add_argument("--verbosity", help="increase output verbosity",action="store_true")
+
+if len(sys.argv) == 1:
+    parser.print_help()
+    exit(1)
+
 args = parser.parse_args()
-#print(args.file)
-#parser.print_help()
-#print(len(args.addcubes))
 
 if args.verbosity:
    print("verbosity turned on")  
 
-
 print('Reading...' + args.file[0])
-totcube = cubes.cube()
+totcube = load_cube.cube()
 totcube.read(args.file[0])
 
 print('Reading...' + args.file[1])
-frag1cube = cubes.cube()
+frag1cube = load_cube.cube()
 frag1cube.read(args.file[1])
 
 print('Reading...' + args.file[2])
-frag2cube = cubes.cube()
+frag2cube = load_cube.cube()
 frag2cube.read(args.file[2])
 
 print('Coping temp data...')

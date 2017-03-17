@@ -20,6 +20,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument("-f","--file", help="cube format file to integrate", type=str)
 parser.add_argument("-fb","--filebader", help="bader volume", type=str)
 parser.add_argument("--verbosity", help="increase output verbosity",action="store_true")
+
+if len(sys.argv) == 1:
+    parser.print_help()
+    exit(1)
+
 args = parser.parse_args()
 
 if args.verbosity:
