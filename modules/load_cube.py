@@ -346,7 +346,7 @@ class cube(object):
       newd = self.get_data()
       newd_raw = self.get_rawdata()
 
-      for i in range(newd_raw.shape[0]):
+      for i in range(len(newd_raw)):
           newd_raw[i] += b.get_rawdata()[i]
 
       for ix in xrange(self.__nx):
@@ -383,7 +383,7 @@ class cube(object):
       newd = self.get_data()
       newd_raw = self.get_rawdata()
 
-      for i in range(newd_raw.shape[0]):
+      for i in range(len(newd_raw)):
           newd_raw[i] -= b.get_rawdata()[i]
 
       for ix in xrange(self.__nx):
@@ -420,7 +420,7 @@ class cube(object):
       newd = self.get_data()
       newd_raw = self.get_rawdata()
 
-      for i in range(newd_raw.shape[0]):
+      for i in range(len(newd_raw)):
           newd_raw[i] = a.get_rawdata()[i] *\
                   b.get_rawdata()[i]
 
