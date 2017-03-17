@@ -39,21 +39,20 @@ frag2cube = load_cube.cube()
 frag2cube.readfile(args.file[2])
 
 print('Coping temp data...')
-tmpdata = copy.copy(totcube.data())
 
-dv = totcube.step_1[0]*totcube.step_2[1]*totcube.step_3[2]
+dv = totcube.get_dx()*totcube.get_dy()*totcube.get_dz()
 
 partsum = 0.
-for i in range(len(totcube.data)) :
-      if (frag1cube.data[i] > frag2cube.data[i]):    
-         partsum += totcube.data[i]
+for i in range(len(totcube.get_rawdata())) :
+      if (frag1cube.get_rawdata()[i] > frag2cube.get_rawdata()[i]):    
+         partsum += totcube.get_rawdata()[i]
 
 print('Electronic Charge on frag1', partsum*dv)
 
 partsum = 0.
-for i in range(len(totcube.data)) :
-      if (frag1cube.data[i] < frag2cube.data[i]):    
-         partsum += totcube.data[i]
+for i in range(len(totcube.get_rawdata())) :
+      if (frag1cube.get_rawdata()[i] < frag2cube.get_rawdata()[i]):    
+         partsum += totcube.get_rawdata()[i]
 
 print('Electronic Charge on frag2', partsum*dv)
 

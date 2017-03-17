@@ -123,7 +123,7 @@ class cube(object):
       self.__ny = 0
       self.__nz = 0
       self.__data = numpy.zeros((1,1,1))
-      self.__rawdata.clear()
+      self.__rawdata[:] = []
       self.__origin = numpy.zeros((1,1,1))
       self.__x = numpy.zeros((1,1,1))
       self.__y = numpy.zeros((1,1,1))
@@ -135,6 +135,9 @@ class cube(object):
       self.__nx = self.__data.shape[0]
       self.__ny = self.__data.shape[1]
       self.__nz = self.__data.shape[2]
+
+  def set_rawdata(self, newd):
+      self.__rawdata = newd
 
   def set_origin(self, x, y, z):
       self.__origin = numpy.array([x, y, z])
@@ -160,6 +163,9 @@ class cube(object):
 
   def get_data(self):
       return self.__data
+
+  def get_rawdata(self):
+      return self.__rawdata
 
   def get_origin(self):
       return self.__origin
@@ -338,6 +344,10 @@ class cube(object):
       retc.set_atoms(self.__atoms)
 
       newd = self.get_data()
+      newd_raw = self.get_rawdata()
+
+      for i in range(newd_raw.shape[0]):
+          newd_raw[i] += b.get_rawdata()[i]
 
       for ix in xrange(self.__nx):
           for iy in xrange(self.__ny):
@@ -345,6 +355,7 @@ class cube(object):
                    newd[ix,iy,iz] += b.get_data()[ix,iy,iz] 
 
       retc.set_data(newd)
+      retc.set_rawdata(newd_raw)
 
       retc.set_x(self.get_x())
       retc.set_y(self.get_y())
@@ -370,6 +381,10 @@ class cube(object):
       retc.set_atoms(self.__atoms)
 
       newd = self.get_data()
+      newd_raw = self.get_rawdata()
+
+      for i in range(newd_raw.shape[0]):
+          newd_raw[i] -= b.get_rawdata()[i]
 
       for ix in xrange(self.__nx):
           for iy in xrange(self.__ny):
@@ -377,6 +392,7 @@ class cube(object):
                    newd[ix,iy,iz] -= b.get_data()[ix,iy,iz] 
 
       retc.set_data(newd)
+      retc.set_rawdata(newd_raw)
 
       retc.set_x(self.get_x())
       retc.set_y(self.get_y())
@@ -402,6 +418,11 @@ class cube(object):
       retc.set_atoms(self.__atoms)
 
       newd = self.get_data()
+      newd_raw = self.get_rawdata()
+
+      for i in range(newd_raw.shape[0]):
+          newd_raw[i] = a.get_rawdata()[i] *\
+                  b.get_rawdata()[i]
 
       for ix in xrange(self.__nx):
           for iy in xrange(self.__ny):
@@ -410,6 +431,7 @@ class cube(object):
                            b.get_data()[ix,iy,iz] 
 
       retc.set_data(newd)
+      retc.set_rawdata(newd_raw)
 
       retc.set_x(self.get_x())
       retc.set_y(self.get_y())
@@ -431,7 +453,7 @@ class cube(object):
 
   def to_xyz (self, fname = "toXYZ.out"):
 
-      temp = numpy.reshape(self.__data, \
+      temp = numpy.reshape(self.__rawdata, \
               (self.__nx*self.__ny*self.__nz), order='C')
   
       x = []
