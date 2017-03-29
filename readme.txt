@@ -2,6 +2,7 @@ pyCD.py
 pyCT.py
 pyDens_iso.py
 pyCD_frenk.py
+anche volendo py_spherical.py
 
 tre casi + 1:
 
