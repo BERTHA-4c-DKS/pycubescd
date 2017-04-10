@@ -32,13 +32,13 @@ mycube = load_cube.cube()
 mycube.readfile (args.file)
 
 if   (args.axis == 'X'):
-     cddata = mycube.cdx('cdx.out')
+     cddata = mycube.cdx(args.file + '_cdx')
 
 elif (args.axis == 'Y'):
-     cddata = mycube.cdy('cdy.out')
+     cddata = mycube.cdy(args.file + '_cdy')
 
 elif (args.axis == 'Z'):
-     cddata = mycube.cdz('cdz.out')
+     cddata = mycube.cdz(args.file + '_cdz')
 
 print(type(args.isodensitypoint))
 
