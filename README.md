@@ -4,10 +4,8 @@ CD code and related cubes module
 
 tomcompile it: python -m compileall pyCD.py 
 
+pycd.py: Produce a CD curve using a single cube file
 
-
-pyCD.py
-pyCT.py
 pyDens_iso.py
 pyCD_frenk.py
 anche volendo py_spherical.py
