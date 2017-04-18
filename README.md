@@ -6,8 +6,15 @@ tomcompile it: python -m compileall pyCD.py
 
 pycd.py: Produce a CD curve using a single cube file
 
+pybader.py: Used to evaluate the partial integral of an 
+            integrand in cube format on a Bader's volume mapped 
+            on cube.
+
+pycdfrags.py: Produce a CD curve using three cubes the two fragments 
+              and the total molecule
+
+aggungi quello per stato base ed ecciato vedi mio esempio
 pyDens_iso.py
-pyCD_frenk.py
 anche volendo py_spherical.py
 
 tre casi + 1:
