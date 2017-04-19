@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
-import numpy as np 
 import argparse
+import numpy 
+import os
 
 import sys
 
@@ -37,13 +38,13 @@ if not (os.path.isfile(args.file1)):
     print "File ", args.file1, " does not exist "
     exit(1)
 
-cubeA = load_cube.cube(file1)
+cubeA = load_cube.cube(args.file1)
 
 if not (os.path.isfile(args.file2)):
     print "File ", args.file2, " does not exist "
     exit(1)
 
-cubeB = load_cube.cube(file2)
+cubeB = load_cube.cube(args.file2)
 
 if args.verbose:
     print "Performing cubaA - cubeB"
@@ -61,7 +62,7 @@ legend = plt.legend(loc='upper right', shadow=True, fontsize='small')
 plt.xlabel('X')
 plt.ylabel('Y')
 
-outfilename = 'cd"+args.axis+".eps'
+outfilename = "cd" + args.axis + ".eps"
 
 if os.path.exists(outfilename):
     print "File ", outfilename, " exist, removing it "
