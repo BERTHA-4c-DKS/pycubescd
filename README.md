@@ -13,7 +13,8 @@ pybader.py: Used to evaluate the partial integral of an
 pycdfrags.py: Produce a CD curve using three cubes the two fragments 
               and the total molecule
 
-aggungi quello per stato base ed ecciato vedi mio esempio
+pycdexct.py: can be used for instance in the case of excited states 
+
 pyDens_iso.py
 anche volendo py_spherical.py
 
