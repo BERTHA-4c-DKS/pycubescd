@@ -13,7 +13,7 @@ import load_cube
 parser = argparse.ArgumentParser()
 parser.add_argument("-f","--file", help="cube format file to perform CD", type=str)
 parser.add_argument("--axis", help="Specify the axis on which evaluating CD. " \
-        "Choose among [x,y,z]", required=True, type=str, default="z")
+        "Choose among [x,y,z]", required=False, type=str, default="z")
 parser.add_argument("-i","--isodensitypoint", \
         help="This is a float determining the isodensty point along a chosen axis. "\
         "An interpolation procedure is used.", type=float)
