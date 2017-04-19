@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np 
 import argparse
+import os
 
 import sys
 
@@ -66,7 +67,7 @@ if args.verbose:
     print "Performing the cube operation totcube - frag1cube - frag2cube"
 
 mycube = totcube - frag1cube - frag2cube
-outfilename = 'cd"+args.axis+".out'
+outfilename = "cd" + args.axis + ".out"
 
 if os.path.exists(outfilename):
     print "File ", outfilename, " exist, removing it "
@@ -92,9 +93,10 @@ if args.isodensitypoint is not None:
    text = '('+str(isovalue)+',' + str(ct) + ')'
    plt.annotate(text, xy=(isovalue,ct), xytext=(isovalue+3.,ct), arrowprops=dict(facecolor='black', shrink=0.05))
    
-plt.plot(x,y)
 
-outfilename = 'cd"+args.axis+".eps'
+outfilename = "cd" + str(args.axis) + ".eps"
+
+plt.plot(x,y)
 
 if os.path.exists(outfilename):
     print "File ", outfilename, " exist, removing it "
