@@ -21,5 +21,6 @@ pydt.py: Generalized the idea of the isodensity: spatial grid is assegned tyo fr
          polarization effects associated with the interaction between two fragments and the formation
          of the chemical bond are reported.
 
-pyDens_iso.py
+pyDens_iso.py: 
+
 anche volendo py_spherical.py
