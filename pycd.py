@@ -77,7 +77,7 @@ if args.isodensitypoint is not None:
            arrowprops=dict(facecolor='black', shrink=0.05))
 
    f = open('CT_iso.dat',"a")
-   f.write("isovalue:%e  CT_iso:%e %s" % (isovalue, ct,args.file))
+   f.write("isovalue:%e  CT_iso:%e %s\n" % (isovalue, ct,args.file))
    f.close()
    
 
