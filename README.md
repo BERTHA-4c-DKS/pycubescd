@@ -1,5 +1,6 @@
 # README #
 
+
 CD code and related cubes module
 
 tomcompile it: python -m compileall pyCD.py 
@@ -25,3 +26,5 @@ pydens_iso.py:
 
 py_spherical.py: Generalized the idea of the isodensity: spatial grid is assegned tyo 
                  fragment 1 or 2  depending on their relative density value. 
+
+pyadd_cube.py : simple tool to add two cubes

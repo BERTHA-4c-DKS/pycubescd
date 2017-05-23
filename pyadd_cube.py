@@ -1,11 +1,7 @@
-import matplotlib.pyplot as plt
-import numpy as np 
 import argparse
 import sys
 
 import os.path
-
-from scipy.interpolate import interp1d
 
 sys.path.append("./modules")
 import load_cube

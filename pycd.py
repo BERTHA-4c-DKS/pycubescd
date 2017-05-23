@@ -47,7 +47,15 @@ if os.path.exists(outfilename):
     print "File ", outfilename, " exist, removing it "
     os.remove(outfilename)
 
-cddata = mycube.cdx(outfilename)
+if (args.axis == 'z'):
+            cddata = mycube.cdz(outfilename)
+
+if (args.axis == 'y'):
+            cddata = mycube.cdy(outfilename)
+
+if (args.axis == 'x'):
+            cddata = mycube.cdx(outfilename)
+
 
 print(type(args.isodensitypoint))
 
@@ -55,6 +63,7 @@ x = np.transpose(np.array(cddata))[0]
 y = np.transpose(np.array(cddata))[1]
 
 if args.isodensitypoint is not None:
+
    isovalue = args.isodensitypoint  
    dq_interpolated = interp1d(x, y, kind = 'cubic')
    ct = dq_interpolated(isovalue)
@@ -66,6 +75,12 @@ if args.isodensitypoint is not None:
    text = '('+str(isovalue)+',' + str(ct) + ')'
    plt.annotate(text, xy=(isovalue,ct), xytext=(isovalue+3.,ct), \
            arrowprops=dict(facecolor='black', shrink=0.05))
+
+   f = open('CT_iso.dat',"a")
+   f.write("isovalue:%e  CT_iso:%e %s" % (isovalue, ct,args.file))
+   f.close()
+   
+
    
 plt.plot(x,y)
 #plt.show()

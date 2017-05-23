@@ -212,9 +212,9 @@ class cube(object):
       ymin = self.get_origin()[1]
       dy = self.get_dy()
       vals = self.integrate("y")
-      i = 0
+      i = 1 
       for v in vals:
-          cd.append([ymin+i*dy, numpy.sum( vals[:i] ) * dy, v])
+          cd.append([ymin+(i-1)*dy, numpy.sum( vals[:i] ) * dy, v])
           i = i + 1
 
       if fname != "":
@@ -236,9 +236,9 @@ class cube(object):
       xmin = self.get_origin()[0]
       dx = self.get_dx()
       vals = self.integrate("x")
-      i = 0
+      i = 1
       for v in vals:
-          cd.append([xmin+i*dx, numpy.sum( vals[:i] ) * dx, v])
+          cd.append([xmin+(i-1)*dx, numpy.sum( vals[:i] ) * dx, v])
           i = i + 1
 
       if fname != "":
@@ -260,9 +260,9 @@ class cube(object):
       zmin = self.get_origin()[2]
       dz = self.get_dz()
       vals = self.integrate("z")
-      i = 0
+      i = 1 
       for v in vals:
-          cd.append([zmin+i*dz, numpy.sum( vals[:i] ) * dz, v])
+          cd.append([zmin+(i-1)*dz, numpy.sum( vals[:i] ) * dz, v])
           i = i + 1
 
       if fname != "":
