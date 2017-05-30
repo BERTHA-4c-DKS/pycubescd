@@ -18,6 +18,8 @@ parser.add_argument("-f1",   "--filefrag1", help="cube format file of molecular 
         type=str, required=True)
 parser.add_argument("-f2",   "--filefrag2", help="cube format file of molecular fragment 2", \
         type=str, required=True)
+parser.add_argument("-iseed",   "--initialseed", help="initial seed (real numer). An estimated value of the isodensity value", \
+        type=str, required=True)
 parser.add_argument("-o_iso","--outputiso",  help="Output file name", \
         type=str, default="stdout")
 parser.add_argument("-axis", help="Specify the axis on which evaluating the isodensity value [x,y,z]",\
@@ -51,7 +53,7 @@ x, y, z = np.array(mycube.get_grid_xyz())
 data = mycube.get_data()
 
 # This is for fixing the range of sampling point (info arises from the cube grid)
-nump = 1000   # Fix number of sampling points
+nump = 40000   # Fix number of sampling points
 
 if (args.axis == 'z'):
 
@@ -100,37 +102,37 @@ y2 = my_interpolating_function(pts)
 
 
 print('Interpol 1D..linear.')
-ydiff = y2 - y1
+ydiff = (y2 - y1)**4
 fdiff = interp1d(xpt, ydiff, kind = 'linear')
-
 try:
-    isodensity_point = newton(fdiff,1.0)  #  find a root Note that your stating point should be close to the final result
+    isodensity_point = fmin(fdiff,args.initialseed)  #  find a root Note that your stating point should be close to the final result
     print('isodensity_point =',isodensity_point)
 except ValueError :
     print('Oops problem in newton algorithm')
 
-print('Interpol 1D..cubic.')
-ydiff = (y2 - y1)**2
-fdiff = interp1d(xpt, ydiff, kind = 'cubic')
-isodensity_point = fmin(fdiff,[1.0])  #  find a root Note that your stating point should be close to the final result
-print('isodensity_point =',isodensity_point)
 
 #print(args.outputiso)
 
 if os.path.exists(args.outputiso):
     print "File ", args.outputiso, " exist, removing it "
-    os.remove(outfilename)
+    os.remove(args.outputiso)
 
 f = open(args.outputiso, 'w')
 f.write(('Isodensity point %e') % isodensity_point)
 f.close()
 
-plt.plot(xpt,ydiff)
-plt.plot(xpt3,fdiff(xpt3))
+#plt.plot(xpt,ydiff)
+plt.plot(xpt,y1)
+plt.plot(xpt,y2)
+
+text = 'isodensity value is' +str(isodensity_point)
+plt.annotate(text, xy=(isodensity_point,0.005), xytext=(isodensity_point,0.005), \
+        arrowprops=dict(facecolor='black', shrink=0.05))
+plt.ylim((-0.1,1.0))
+plt.xlabel('r (a.u)')
+
 
 outfilename = args.outputiso + ".eps"
-
-plt.plot(x,y)
 
 if os.path.exists(outfilename):
     print "File ", outfilename, " exist, removing it "
