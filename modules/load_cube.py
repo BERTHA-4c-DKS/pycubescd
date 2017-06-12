@@ -487,6 +487,34 @@ class cube(object):
 
       return x, y, z
 
+  def spherical_intdr(self, center, r, dr):
+
+      x = []
+      y = []
+      z = []
+      dist = []
+      for i in range(self.__nx):
+         for j in range(self.__ny): 
+            for k in range(self.__nz):
+                x = self.__origin[0] + i * self.__x[0]
+                y = self.__origin[1] + j * self.__y[1] 
+                z = self.__origin[2] + k * self.__z[2] 
+                tmp2 = (x - center[0])**2 + (y - center[1])**2 + (z - center[2])**2 
+                dist.append(math.sqrt(tmp2)) 
+
+      dv = self.__x[0] * self.__y[1] * self.__z[2]
+      
+      summa = 0.0
+      a = 0
+      for i in range(self.__nx):
+         for j in range(self.__ny): 
+            for k in range(self.__nz):
+                if (dist[a] >= r) and (dist[a] < (r+dr)):    
+                    summa += self.__data[i,j,k]
+                a = a + 1
+
+      return summa * dv
+
   def spherical_int(self, center, diameter):
 
       x = []
