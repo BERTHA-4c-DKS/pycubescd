@@ -487,11 +487,82 @@ class cube(object):
 
       return x, y, z
 
+  def get_xminmax(self):
+      xmin = self.__origin[0]
+      xmax = self.__origin[0] + (self.__nx - 1) * self.__x[0]
+
+      return xmin, xmax
+
+  def get_yminmax(self):
+      ymin = self.__origin[1]
+      ymax = self.__origin[1] + (self.__ny - 1) * self.__y[1]
+
+      return ymin, ymax
+
+  def get_zminmax(self):
+      zmin = self.__origin[2]
+      zmax = self.__origin[2] + (self.__nz - 1) * self.__z[2]
+
+      return zmin, zmax
+
+  def get_enclosed_r (self, center):
+
+      x = center[0]
+      y = center[1]
+      z = center[2]
+
+      xmin, xmax = self.get_xminmax()
+      ymin, ymax = self.get_yminmax()
+      zmin, zmax = self.get_zminmax()
+
+      if (x < xmax) and (x > xmin):
+          if (y > ymin) and (y < ymax):
+              if (z > zmin) and (z < zmax):
+                  rx = min(x - xmin, xmax - x)
+                  ry = min(y - ymin, ymax - y)
+                  rz = min(z - zmin, zmax - z)
+
+                  return min(rx, min(ry, rz))
+
+      return None
+
+  def spherical_int_rdr(self, center, rmax, dr):
+
+      nstep = int(rmax/dr) - 1
+
+      dim = self.__nx * self.__ny * self.__nz
+
+      a = 0
+      ltrip = []
+      dist = numpy.zeros(dim)
+      for i in range(self.__nx):
+         for j in range(self.__ny): 
+            for k in range(self.__nz):
+                x = self.__origin[0] + i * self.__x[0]
+                y = self.__origin[1] + j * self.__y[1] 
+                z = self.__origin[2] + k * self.__z[2] 
+                tmp2 = (x - center[0])**2 + (y - center[1])**2 + (z - center[2])**2 
+                dist[a] = math.sqrt(tmp2)
+                ltrip.append((i, j, k))
+                a = a + 1
+
+      trip = numpy.asarray(ltrip)
+      dv = self.__x[0] * self.__y[1] * self.__z[2]
+      
+      r = 0.0
+      rv = []
+      for i in range(0, nstep):
+          vals = trip[(dist >= r) & (dist < r + dr)]
+          summa = 0.0
+          for v in vals:
+              summa += self.__data[v[0],v[1],v[2]]
+          rv.append(summa*dv)
+          r = r + dr
+
+      return rv
+
   def spherical_intdr(self, center, r, dr):
 
-      x = []
-      y = []
-      z = []
       dist = []
       for i in range(self.__nx):
          for j in range(self.__ny): 
@@ -517,9 +588,6 @@ class cube(object):
 
   def spherical_int(self, center, diameter):
 
-      x = []
-      y = []
-      z = []
       dist = []
       for i in range(self.__nx):
          for j in range(self.__ny): 

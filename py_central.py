@@ -42,6 +42,8 @@ if len(sys.argv) == 1:
 
 args = parser.parse_args()
 
+dr = float(args.deltar)
+
 if not (os.path.isfile(args.filea)):
     print "File ", args.filea, " does not exist "
     exit(1)
@@ -54,9 +56,37 @@ if not (os.path.isfile(args.fileb)):
     print "File ", args.fileb, " does not exist "
     exit(1)
 
+center = [0.0, 0.0, 0.0]
+
+cs = args.center 
+scs = cs.split(",")
+
+if len(scs) != 3:
+    print "Error in center values"
+    exit(1)
+
+for i in range(len(scs)):
+    center[i] = float(scs[i])
+
 print('Reading... ' + args.fileb)
 bcube = load_cube.cube()
 bcube.readfile(args.fileb)
 
 totcube = acube - bcube
 
+rmax = totcube.get_enclosed_r(center) 
+
+nstep = int(rmax/dr) - 1
+
+if (nstep <= 0):
+    print "Error invalid number of steps"
+    exit(1)
+
+print "R: ", rmax, " nstep: ", nstep
+
+rv = totcube.spherical_int_rdr(center, rmax, dr)
+
+r = 0.0
+for i in range(0, len(rv)):
+    print r , rv[i]
+    r = r + dr
