@@ -70,4 +70,4 @@ if os.path.exists(outfilename):
 
 print "Dumping file ", outfilename
 plt.savefig(outfilename)
-#plt.show()
+plt.show()
