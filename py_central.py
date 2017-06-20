@@ -31,7 +31,7 @@ parser.add_argument("-fb","--fileb", help="cube format file to be used as "\
         "file B (perfoem A - B)", \
         required=True, type=str)
 parser.add_argument("-c","--center", help="X,Y,Z coordinate of the center "\
-        " will use 0,0,0 as a default value", \
+        "(e.g. --center \"0,0,0\")", \
         required=True, type=str)
 parser.add_argument("-dr","--deltar", help="dR step value ", \
         required=True, type=str)
