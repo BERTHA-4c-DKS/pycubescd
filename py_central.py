@@ -3,6 +3,7 @@ import numpy
 import argparse
 import copy 
 import os.path
+import math
 
 import sys
 import decimal
@@ -88,5 +89,5 @@ rv = totcube.spherical_int_rdr(center, rmax, dr)
 
 r = 0.0
 for i in range(0, len(rv)):
-    print r , numpy.sum( rv[:i] ) * dr, rv[i]
+    print r , numpy.sum( rv[:i] ) * 4.0 * math.pi * r**2 * dr, rv[i]
     r = r + dr
