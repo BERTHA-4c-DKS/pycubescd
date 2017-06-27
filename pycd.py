@@ -80,8 +80,6 @@ if args.isodensitypoint is not None:
    f.write("isovalue:%e  CT_iso:%e %s\n" % (isovalue, ct,args.file))
    f.close()
    
-
-   
 plt.plot(x,y)
 #plt.show()
 outfilename = args.file + '_cd'+args.axis+".eps"
