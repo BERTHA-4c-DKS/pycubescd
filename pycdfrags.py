@@ -73,7 +73,16 @@ if os.path.exists(outfilename):
     print "File ", outfilename, " exist, removing it "
     os.remove(outfilename)
 
-cddata = mycube.cdx(outfilename)
+
+if (args.axis == 'z'):
+            cddata = mycube.cdz(outfilename)
+
+if (args.axis == 'y'):
+            cddata = mycube.cdy(outfilename)
+
+if (args.axis == 'x'):
+            cddata = mycube.cdx(outfilename)
+
 
 print(type(args.isodensitypoint))
 
