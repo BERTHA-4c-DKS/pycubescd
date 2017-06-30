@@ -107,8 +107,23 @@ fdiff = interp1d(xpt, ydiff, kind = 'linear')
 try:
     isodensity_point = fmin(fdiff,args.initialseed)  #  find a root Note that your stating point should be close to the final result
     print('isodensity_point =',isodensity_point)
+
 except ValueError :
     print('Oops problem in newton algorithm')
+
+
+if (args.axis == 'z'):
+      isodensity_value = my_interpolating_function([0.0,0.0,float(isodensity_point)])   
+      print('isodensity_value=',isodensity_value)
+
+if (args.axis == 'y'):
+      isodensity_value = my_interpolating_function([0.0,float(isodensity_point),0.0])
+      print('isodensity_value=',isodensity_value)
+
+if (args.axis == 'x'):
+      isodensity_value = my_interpolating_function([float(isodensity_point),0.0,0.0])
+      print('isodensity_value=',isodensity_value)
+
 
 
 #print(args.outputiso)
@@ -118,16 +133,21 @@ if os.path.exists(args.outputiso):
     os.remove(args.outputiso)
 
 f = open(args.outputiso, 'w')
-f.write(('Isodensity point %e') % isodensity_point)
+f.write(('Isodensity point at %f a.u. along axis %s \n') % (isodensity_point, args.axis) )
+f.write(('Isodensity value of %f e/(a.u.)^3') % isodensity_value)
 f.close()
 
 #plt.plot(xpt,ydiff)
 plt.plot(xpt,y1)
 plt.plot(xpt,y2)
 
-text = 'isodensity value is' +str(isodensity_point)
+text = 'isodensity point is' +str(isodensity_point)
 plt.annotate(text, xy=(isodensity_point,0.005), xytext=(isodensity_point,0.005), \
         arrowprops=dict(facecolor='black', shrink=0.05))
+
+text1 ='isodensity value is' +str(isodensity_value)
+plt.annotate(text1, xy=(isodensity_point,0.005), xytext=(isodensity_point,0.05))
+
 plt.ylim((-0.1,1.0))
 plt.xlabel('r (a.u)')
 

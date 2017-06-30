@@ -1,5 +1,10 @@
 # README #
 
+SET in your ~/.bashrc the DIRpycubescd variable 
+ 
+  DIRPYCUBESCD=....../pycubescd [for example /home/diego/pycubescd]
+  export PYTHONPATH=$PYTHONPATH:$DIRPYCUBESCD:$DIRPYCUBESCD/modules
+
 
 CD code and related cubes module
 

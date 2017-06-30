@@ -63,11 +63,11 @@ cmd.isosurface('sm', 'this', -_iso)
 cmd.color('_colorm', 'sm')
 
 
-cmd.load('dif_B1.cube')
-cmd.isosurface('spp', 'dif_B1', 0.00008)
-cmd.color('blue', 'spp')
-cmd.isosurface('smp', 'dif_B1', -0.00008)
-cmd.color('red', 'smp')
+#cmd.load('dif_B1.cube')
+#cmd.isosurface('spp', 'dif_B1', 0.00008)
+#cmd.color('blue', 'spp')
+#cmd.isosurface('smp', 'dif_B1', -0.00008)
+#cmd.color('red', 'smp')
 
 
 #cmd.set ('label_font_id', 16)
