@@ -127,6 +127,12 @@ print('')
 print('Electronic Charge on frag1, CT = ', CTfrag1)
 print('Note, a positive value means a charge accumulation in frag1')
 print('')
+
+f = open('CT_new.dat',"a")
+f.write("CT: %f %s \n" % (CTfrag1,args.file))
+f.close()
+
+
 print('Density based descriptors for CT and polarization:details see JCTC,12, 1236 (2016)')
 print('Qtot = Qfrag1+Qfrag2+|CT|')
 print('')
