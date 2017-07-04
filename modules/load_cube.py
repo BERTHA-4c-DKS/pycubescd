@@ -526,7 +526,7 @@ class cube(object):
 
       return None
 
-  def spherical_int_rdr(self, center, rmax, dr):
+  def spherical_int_rdr(self, center, rmax, dr, axis="N"):
 
       nstep = int(rmax/dr) - 1
 
@@ -535,6 +535,9 @@ class cube(object):
       a = 0
       ltrip = []
       dist = numpy.zeros(dim)
+      xval = numpy.zeros(dim)
+      yval = numpy.zeros(dim)
+      zval = numpy.zeros(dim)
       for i in range(self.__nx):
          for j in range(self.__ny): 
             for k in range(self.__nz):
@@ -543,6 +546,9 @@ class cube(object):
                 z = self.__origin[2] + k * self.__z[2] 
                 tmp2 = (x - center[0])**2 + (y - center[1])**2 + (z - center[2])**2 
                 dist[a] = math.sqrt(tmp2)
+                xval[a] = x
+                yval[a] = y
+                zval[a] = z
                 ltrip.append((i, j, k))
                 a = a + 1
 
@@ -551,13 +557,66 @@ class cube(object):
       
       r = 0.0
       rv = []
-      for i in range(0, nstep):
-          vals = trip[(dist >= r) & (dist < r + dr)]
-          summa = 0.0
-          for v in vals:
-              summa += self.__data[v[0],v[1],v[2]]
-          rv.append(summa*dv)
-          r = r + dr
+
+      if axis == "N":
+          for i in range(0, nstep):
+              vals = trip[(dist >= r) & (dist < r + dr)]
+              summa = 0.0
+              for v in vals:
+                  summa += self.__data[v[0],v[1],v[2]]
+              rv.append(summa*dv)
+              r = r + dr
+      else:
+          if axis == "x":
+              for i in range(0, nstep):
+                  vals = trip[(dist >= r) & (dist < r + dr) & (xval > 0.0)]
+                  summa = 0.0
+                  for v in vals:
+                      summa += self.__data[v[0],v[1],v[2]]
+                  rv.append(summa*dv)
+                  r = r + dr
+          elif axis == "mx":
+              for i in range(0, nstep):
+                  vals = trip[(dist >= r) & (dist < r + dr) & (xval < 0.0)]
+                  summa = 0.0
+                  for v in vals:
+                      summa += self.__data[v[0],v[1],v[2]]
+                  rv.append(summa*dv)
+                  r = r + dr
+          elif axis == "y":
+              for i in range(0, nstep):
+                  vals = trip[(dist >= r) & (dist < r + dr) & (yval > 0.0)]
+                  summa = 0.0
+                  for v in vals:
+                      summa += self.__data[v[0],v[1],v[2]]
+                  rv.append(summa*dv)
+                  r = r + dr
+          elif axis == "my":
+              for i in range(0, nstep):
+                  vals = trip[(dist >= r) & (dist < r + dr) & (yval < 0.0)]
+                  summa = 0.0
+                  for v in vals:
+                      summa += self.__data[v[0],v[1],v[2]]
+                  rv.append(summa*dv)
+                  r = r + dr
+          elif axis == "z":
+              for i in range(0, nstep):
+                  vals = trip[(dist >= r) & (dist < r + dr) & (zval > 0.0)]
+                  summa = 0.0
+                  for v in vals:
+                      summa += self.__data[v[0],v[1],v[2]]
+                  rv.append(summa*dv)
+                  r = r + dr
+          elif axis == "mz":
+              for i in range(0, nstep):
+                  vals = trip[(dist >= r) & (dist < r + dr) & (zval < 0.0)]
+                  summa = 0.0
+                  for v in vals:
+                      summa += self.__data[v[0],v[1],v[2]]
+                  rv.append(summa*dv)
+                  r = r + dr
+          else:
+              return None
 
       return rv
 

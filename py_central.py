@@ -36,6 +36,9 @@ parser.add_argument("-c","--center", help="X,Y,Z coordinate of the center "\
         required=False, type=str, default="0.0,0.0,0.0")
 parser.add_argument("-dr","--deltar", help="dR step value ", \
         required=True, type=str)
+parser.add_argument("-ax","--axis", help="axis to use mx, x, my, y, mz or z ", \
+        required=False, type=str, default="N")
+
 
 if len(sys.argv) == 1:
     parser.print_help()
@@ -52,6 +55,7 @@ if not (os.path.isfile(args.filea)):
 print('Reading... ' + args.filea)
 acube = load_cube.cube()
 acube.readfile(args.filea)
+axis = args.axis
 
 if not (os.path.isfile(args.fileb)):
     print "File ", args.fileb, " does not exist "
@@ -100,7 +104,7 @@ if (nstep <= 0):
 print "R: ", rmax, " nstep: ", nstep
 print "Start computing ... "
 
-rv = totcube.spherical_int_rdr(center, rmax, dr)
+rv = totcube.spherical_int_rdr(center, rmax, dr, axis)
 
 cd = []
 r = 0.0
