@@ -573,24 +573,41 @@ class cube(object):
           newdist = dist
           newtrip = trip
           if axis == "x":
-              if angle == 180:
+              if angle >= 90:
                   newdist = dist[( xval > 0.0)]
                   newtrip = trip[( xval > 0.0)]
               else:
                   normvectors = numpy.array([numpy.linalg.norm(v) for v in vectors]) 
                   dotprod = numpy.array([(v[0]*1.0 + v[1]*0.0 + v[2]*0.0) for v in vectors])
-
                   cosangle = dotprod/normvectors
-
                   angles =  numpy.absolute(numpy.arccos(cosangle) * (180.0/math.pi))
 
-                  exit(1)
+                  newdist = dist[( xval > 0.0) & (angles <= angle)]
+                  newtrip = trip[( xval > 0.0) & (angles <= angle)]
           elif axis == "mx":
-              newdist = dist[( xval < 0.0)]
-              newtrip = trip[( xval < 0.0)]
+              if angle >= 90 :
+                  newdist = dist[( xval < 0.0)]
+                  newtrip = trip[( xval < 0.0)]
+              else:
+                  normvectors = numpy.array([numpy.linalg.norm(v) for v in vectors]) 
+                  dotprod = numpy.array([(v[0]*-1.0 + v[1]*0.0 + v[2]*0.0) for v in vectors])
+                  cosangle = dotprod/normvectors
+                  angles =  numpy.absolute(numpy.arccos(cosangle) * (180.0/math.pi))
+
+                  newdist = dist[( xval < 0.0) & (angles <= angle)]
+                  newtrip = trip[( xval < 0.0) & (angles <= angle)]
           elif axis == "y":
-              newdist = dist[( yval > 0.0)]
-              newtrip = trip[( yval > 0.0)]
+              if angle >= 90 :
+                  newdist = dist[( yval > 0.0)]
+                  newtrip = trip[( yval > 0.0)]
+              else:
+                  normvectors = numpy.array([numpy.linalg.norm(v) for v in vectors]) 
+                  dotprod = numpy.array([(v[0]*0.0 + v[1]*1.0 + v[2]*0.0) for v in vectors])
+                  cosangle = dotprod/normvectors
+                  angles =  numpy.absolute(numpy.arccos(cosangle) * (180.0/math.pi))
+
+                  newdist = dist[( yval > 0.0) & (angles <= angle)]
+                  newtrip = trip[( yval > 0.0) & (angles <= angle)]
           elif axis == "my":
               newdist = dist[( yval < 0.0)]
               newtrip = trip[( yval < 0.0)]
