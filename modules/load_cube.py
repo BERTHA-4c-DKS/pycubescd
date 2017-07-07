@@ -534,6 +534,7 @@ class cube(object):
 
       a = 0
       ltrip = []
+      lvectors = []
       dist = numpy.zeros(dim)
       xval = numpy.zeros(dim)
       yval = numpy.zeros(dim)
@@ -550,9 +551,11 @@ class cube(object):
                 yval[a] = y
                 zval[a] = z
                 ltrip.append((i, j, k))
+                lvectors.append((x, y, z))
                 a = a + 1
 
       trip = numpy.asarray(ltrip)
+      vectors = numpy.asarray(lvectors)
       dv = self.__x[0] * self.__y[1] * self.__z[2]
       
       r = 0.0
@@ -574,13 +577,13 @@ class cube(object):
                   newdist = dist[( xval > 0.0)]
                   newtrip = trip[( xval > 0.0)]
               else:
-                  # devo ridurre tutto a zero 1 dire
-                  newyval = yval[( xval > 0.0)]
-                  newzval = zval[( xval > 0.0)]
-                  yang = numpy.absolute(numpy.arcsin(newyval) * (180.0/math.pi))
-                  zang = numpy.absolute(numpy.arcsin(newzval) * (180.0/math.pi))
-                  print yang
-                  print zang
+                  normvectors = numpy.array([numpy.linalg.norm(v) for v in vectors]) 
+                  dotprod = numpy.array([(v[0]*1.0 + v[1]*0.0 + v[2]*0.0) for v in vectors])
+
+                  cosangle = dotprod/normvectors
+
+                  angles =  numpy.absolute(numpy.arccos(cosangle) * (180.0/math.pi))
+
                   exit(1)
           elif axis == "mx":
               newdist = dist[( xval < 0.0)]
