@@ -526,7 +526,7 @@ class cube(object):
 
       return None
 
-  def spherical_int_rdr(self, center, rmax, dr, axis="N"):
+  def spherical_int_rdr(self, center, rmax, dr, axis="N", angle=180):
 
       nstep = int(rmax/dr) - 1
 
@@ -567,56 +567,35 @@ class cube(object):
               rv.append(summa*dv)
               r = r + dr
       else:
+          newdist = dist
           if axis == "x":
-              for i in range(0, nstep):
-                  vals = trip[(dist >= r) & (dist < r + dr) & (xval > 0.0)]
-                  summa = 0.0
-                  for v in vals:
-                      summa += self.__data[v[0],v[1],v[2]]
-                  rv.append(summa*dv)
-                  r = r + dr
+              if angle == 180:
+                  newdist = dist[( xval > 0.0)]
+              else:
+                  yang = numpy.absolute(numpy.arcsin(yval) * (180.0/math.pi))
+                  zang = numpy.absolute(numpy.arcsin(zval) * (180.0/math.pi))
+                  print yang
+                  print zang
+                  exit(1)
           elif axis == "mx":
-              for i in range(0, nstep):
-                  vals = trip[(dist >= r) & (dist < r + dr) & (xval < 0.0)]
-                  summa = 0.0
-                  for v in vals:
-                      summa += self.__data[v[0],v[1],v[2]]
-                  rv.append(summa*dv)
-                  r = r + dr
+              newdist = dist[( xval < 0.0)]
           elif axis == "y":
-              for i in range(0, nstep):
-                  vals = trip[(dist >= r) & (dist < r + dr) & (yval > 0.0)]
-                  summa = 0.0
-                  for v in vals:
-                      summa += self.__data[v[0],v[1],v[2]]
-                  rv.append(summa*dv)
-                  r = r + dr
+              newdist = dist[( yval > 0.0)]
           elif axis == "my":
-              for i in range(0, nstep):
-                  vals = trip[(dist >= r) & (dist < r + dr) & (yval < 0.0)]
-                  summa = 0.0
-                  for v in vals:
-                      summa += self.__data[v[0],v[1],v[2]]
-                  rv.append(summa*dv)
-                  r = r + dr
+              newdist = dist[( yval < 0.0)]
           elif axis == "z":
-              for i in range(0, nstep):
-                  vals = trip[(dist >= r) & (dist < r + dr) & (zval > 0.0)]
-                  summa = 0.0
-                  for v in vals:
-                      summa += self.__data[v[0],v[1],v[2]]
-                  rv.append(summa*dv)
-                  r = r + dr
+              newdist = dist[( zval > 0.0)]
           elif axis == "mz":
-              for i in range(0, nstep):
-                  vals = trip[(dist >= r) & (dist < r + dr) & (zval < 0.0)]
-                  summa = 0.0
-                  for v in vals:
-                      summa += self.__data[v[0],v[1],v[2]]
-                  rv.append(summa*dv)
-                  r = r + dr
+              newdist = dist[( zval < 0.0)]
           else:
               return None
+          for i in range(0, nstep):
+              vals = trip[(newdist >= r) & (newdist < r + dr)]
+              summa = 0.0
+              for v in vals:
+                  summa += self.__data[v[0],v[1],v[2]]
+              rv.append(summa*dv)
+              r = r + dr
 
       return rv
 

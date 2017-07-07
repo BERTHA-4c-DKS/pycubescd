@@ -38,7 +38,8 @@ parser.add_argument("-dr","--deltar", help="dR step value ", \
         required=True, type=str)
 parser.add_argument("-ax","--axis", help="axis to use mx, x, my, y, mz or z ", \
         required=False, type=str, default="N")
-
+parser.add_argument("-anx","--angle", help="angle to use with respect to axis selected", \
+        required=False, type=str, default="180")
 
 if len(sys.argv) == 1:
     parser.print_help()
@@ -56,6 +57,7 @@ print('Reading... ' + args.filea)
 acube = load_cube.cube()
 acube.readfile(args.filea)
 axis = args.axis
+angle = float(args.angle)
 
 if not (os.path.isfile(args.fileb)):
     print "File ", args.fileb, " does not exist "
@@ -104,7 +106,7 @@ if (nstep <= 0):
 print "R: ", rmax, " nstep: ", nstep
 print "Start computing ... "
 
-rv = totcube.spherical_int_rdr(center, rmax, dr, axis)
+rv = totcube.spherical_int_rdr(center, rmax, dr, axis, angle)
 
 cd = []
 r = 0.0
