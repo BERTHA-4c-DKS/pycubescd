@@ -572,8 +572,11 @@ class cube(object):
               if angle == 180:
                   newdist = dist[( xval > 0.0)]
               else:
-                  yang = numpy.absolute(numpy.arcsin(yval) * (180.0/math.pi))
-                  zang = numpy.absolute(numpy.arcsin(zval) * (180.0/math.pi))
+                  # devo ridurre tutto a zero 1 dire
+                  newyval = yval[( xval > 0.0)]
+                  newzval = zval[( xval > 0.0)]
+                  yang = numpy.absolute(numpy.arcsin(newyval) * (180.0/math.pi))
+                  zang = numpy.absolute(numpy.arcsin(newzval) * (180.0/math.pi))
                   print yang
                   print zang
                   exit(1)
@@ -589,6 +592,7 @@ class cube(object):
               newdist = dist[( zval < 0.0)]
           else:
               return None
+
           for i in range(0, nstep):
               vals = trip[(newdist >= r) & (newdist < r + dr)]
               summa = 0.0
