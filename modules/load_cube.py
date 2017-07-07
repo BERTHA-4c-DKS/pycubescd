@@ -568,9 +568,11 @@ class cube(object):
               r = r + dr
       else:
           newdist = dist
+          newtrip = trip
           if axis == "x":
               if angle == 180:
                   newdist = dist[( xval > 0.0)]
+                  newtrip = trip[( xval > 0.0)]
               else:
                   # devo ridurre tutto a zero 1 dire
                   newyval = yval[( xval > 0.0)]
@@ -582,19 +584,24 @@ class cube(object):
                   exit(1)
           elif axis == "mx":
               newdist = dist[( xval < 0.0)]
+              newtrip = trip[( xval < 0.0)]
           elif axis == "y":
               newdist = dist[( yval > 0.0)]
+              newtrip = trip[( yval > 0.0)]
           elif axis == "my":
               newdist = dist[( yval < 0.0)]
+              newtrip = trip[( yval < 0.0)]
           elif axis == "z":
               newdist = dist[( zval > 0.0)]
+              newtrip = trip[( zval > 0.0)]
           elif axis == "mz":
               newdist = dist[( zval < 0.0)]
+              newtrip = trip[( zval < 0.0)]
           else:
               return None
 
           for i in range(0, nstep):
-              vals = trip[(newdist >= r) & (newdist < r + dr)]
+              vals = newtrip[(newdist >= r) & (newdist < r + dr)]
               summa = 0.0
               for v in vals:
                   summa += self.__data[v[0],v[1],v[2]]
