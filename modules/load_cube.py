@@ -609,14 +609,41 @@ class cube(object):
                   newdist = dist[( yval > 0.0) & (angles <= angle)]
                   newtrip = trip[( yval > 0.0) & (angles <= angle)]
           elif axis == "my":
-              newdist = dist[( yval < 0.0)]
-              newtrip = trip[( yval < 0.0)]
+              if angle >= 90 :
+                  newdist = dist[( yval < 0.0)]
+                  newtrip = trip[( yval < 0.0)]
+              else:
+                  normvectors = numpy.array([numpy.linalg.norm(v) for v in vectors]) 
+                  dotprod = numpy.array([(v[0]*0.0 + v[1]*-1.0 + v[2]*0.0) for v in vectors])
+                  cosangle = dotprod/normvectors
+                  angles =  numpy.absolute(numpy.arccos(cosangle) * (180.0/math.pi))
+
+                  newdist = dist[( yval < 0.0) & (angles <= angle)]
+                  newtrip = trip[( yval < 0.0) & (angles <= angle)]
           elif axis == "z":
-              newdist = dist[( zval > 0.0)]
-              newtrip = trip[( zval > 0.0)]
+              if angle >= 90 :
+                  newdist = dist[( zval > 0.0)]
+                  newtrip = trip[( zval > 0.0)]
+              else:
+                  normvectors = numpy.array([numpy.linalg.norm(v) for v in vectors]) 
+                  dotprod = numpy.array([(v[0]*0.0 + v[1]*0.0 + v[2]*1.0) for v in vectors])
+                  cosangle = dotprod/normvectors
+                  angles =  numpy.absolute(numpy.arccos(cosangle) * (180.0/math.pi))
+
+                  newdist = dist[( zval > 0.0) & (angles <= angle)]
+                  newtrip = trip[( zval > 0.0) & (angles <= angle)]
           elif axis == "mz":
-              newdist = dist[( zval < 0.0)]
-              newtrip = trip[( zval < 0.0)]
+              if angle >= 90 :
+                  newdist = dist[( zval < 0.0)]
+                  newtrip = trip[( zval < 0.0)]
+              else:
+                  normvectors = numpy.array([numpy.linalg.norm(v) for v in vectors]) 
+                  dotprod = numpy.array([(v[0]*0.0 + v[1]*0.0 + v[2]*-1.0) for v in vectors])
+                  cosangle = dotprod/normvectors
+                  angles =  numpy.absolute(numpy.arccos(cosangle) * (180.0/math.pi))
+
+                  newdist = dist[( zval < 0.0) & (angles <= angle)]
+                  newtrip = trip[( zval < 0.0) & (angles <= angle)]
           else:
               return None
 
