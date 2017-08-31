@@ -10,6 +10,7 @@ import decimal
 
 sys.path.append("./modules")
 import load_cube
+import elements
 
 ###############################################################################
 
@@ -118,20 +119,10 @@ for i in range(0, len(rv)):
 
 v = numpy.array(cd)
 
-atoms = acube.get_atoms()
 
-for a in atoms:
-    coords = a.get_coordinates()
-
-    dist = math.sqrt((center[0] - coords[0])**2 + \
-            (center[1] - coords[1])**2 + \
-            (center[2] - coords[2])**2)
-    print dist
-
-
-#plt.clf()
-fig = plt.figure()
-ax = fig.add_subplot(1, 1, 1)
+plt.clf()
+#fig = plt.figure()
+#ax = fig.add_subplot(1, 1, 1)
 
 plt.plot(v[:,0], v[:,1], 'red', linestyle='--', linewidth=2, label='CD')
 plt.plot(v[:,0], v[:,2], 'blue', linestyle='--', linewidth=2, label='VALUES')
@@ -140,6 +131,20 @@ legend = plt.legend(loc='upper right', shadow=True, fontsize='small')
 plt.xlabel('X')
 plt.ylabel('Y')
 
+
+font = {'family': 'serif', 'color':  'darkred', 'weight': 'normal', 'size': 16}
+atoms = acube.get_atoms()
+
+for a in atoms:
+    coords = a.get_coordinates()
+
+    dist = math.sqrt((center[0] - coords[0])**2 + \
+            (center[1] - coords[1])**2 + \
+            (center[2] - coords[2])**2)
+    if a.get_Z() != 1:
+        #print dist, a.get_Z()
+        plt.text(dist, 0.0, elements.ztosymbol[a.get_Z()], fontdict=font)
+
 outfilename = "cd.eps"
 
 if os.path.exists(outfilename):
@@ -147,5 +152,5 @@ if os.path.exists(outfilename):
     os.remove(outfilename)
 
 print "Dumping file ", outfilename
-#plt.savefig(outfilename)
-plt.show()
+plt.savefig(outfilename)
+#plt.show()

@@ -9,10 +9,10 @@ class atom(object):
     self.__coordinates = (x, y, z)
     self.__charge = charge
   
-  def set_z(self, zin): 
+  def set_Z(self, zin): 
     self.__z = zin
   
-  def get_z(self):
+  def get_Z(self):
     return self.__z
 
   def set_coordinates(self, x, y, z):
