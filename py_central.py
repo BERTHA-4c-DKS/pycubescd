@@ -41,8 +41,10 @@ parser.add_argument("-ax","--axis", help="axis to use mx, x, my, y, mz or z ", \
         required=False, type=str, default="N")
 parser.add_argument("-anx","--angle", help="angle to use with respect to axis selected", \
         required=False, type=str, default="180")
-parser.add_argument("-o","--outfilename", help="EPS output filename", \
+parser.add_argument("-p","--plotoutfilename", help="EPS output filename", \
         required=False, type=str, default="cd.eps")
+parser.add_argument("-o","--outfilename", help="text output filename", \
+        required=False, type=str, default="out.txt")
 parser.add_argument("-d","--diffoutfilename", help="Cube difference output filename", \
         required=False, type=str, default="diff.eps")
 
@@ -113,13 +115,27 @@ print "Start computing ... "
 
 rv = totcube.spherical_int_rdr(center, rmax, dr, axis, angle)
 
+outfilename = args.outfilename
+
+if os.path.exists(outfilename):
+    print "File ", outfilename, " exist, removing it "
+    os.remove(outfilename)
+
+print "Writing ... " + outfilename
+
+fp = open(outfilename, "w")
+
 cd = []
 r = 0.0
 for i in range(0, len(rv)):
-    print r , numpy.sum( rv[:i] ) * dr, rv[i]
+    #print r , numpy.sum( rv[:i] ) * dr, rv[i]
+    fp.write(str(r) + " " + str(numpy.sum( rv[:i] ) * dr) \
+            + " " + str(rv[i]) + "\n")
     #cd.append([r , numpy.sum( rv[:i] ) * 4.0 * math.pi * r**2 * dr, rv[i]])
     cd.append([r , numpy.sum( rv[:i] ) * dr, rv[i]])
     r = r + dr
+
+fp.close()
 
 v = numpy.array(cd)
 
@@ -135,7 +151,6 @@ legend = plt.legend(loc='upper right', shadow=True, fontsize='small')
 plt.xlabel('X')
 plt.ylabel('Y')
 
-
 font = {'family': 'serif', 'color':  'darkred', 'weight': 'normal', 'size': 16}
 atoms = acube.get_atoms()
 
@@ -149,7 +164,7 @@ for a in atoms:
         #print dist, a.get_Z()
         plt.text(dist, 0.0, elements.ztosymbol[a.get_Z()], fontdict=font)
 
-outfilename = args.outfilename
+outfilename = args.plotoutfilename
 
 if os.path.exists(outfilename):
     print "File ", outfilename, " exist, removing it "
