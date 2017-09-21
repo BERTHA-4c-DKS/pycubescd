@@ -9,9 +9,9 @@ sys.path.append("./modules")
 import load_cube
 
 parser = argparse.ArgumentParser()
-parser.add_argument("-f1","--file1", help="cube format file to perform CD", \
+parser.add_argument("-f1","--file1", help="cube format file to perform CD ( cube1 - cube2)", \
         required=True, type=str)
-parser.add_argument("-f2","--file2", help="cube format file to perform CD", \
+parser.add_argument("-f2","--file2", help="cube format file to perform CD ( cube1 - cube2)", \
         required=True, type=str)
 parser.add_argument("-axis", help="Specify the axis on which evaluating CD. " \
         "Choose among [x,y,z]", type=str, default="z")

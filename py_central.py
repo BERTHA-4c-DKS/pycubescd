@@ -41,6 +41,10 @@ parser.add_argument("-ax","--axis", help="axis to use mx, x, my, y, mz or z ", \
         required=False, type=str, default="N")
 parser.add_argument("-anx","--angle", help="angle to use with respect to axis selected", \
         required=False, type=str, default="180")
+parser.add_argument("-o","--outfilename", help="EPS output filename", \
+        required=False, type=str, default="cd.eps")
+parser.add_argument("-d","--diffoutfilename", help="Cube difference output filename", \
+        required=False, type=str, default="diff.eps")
 
 if len(sys.argv) == 1:
     parser.print_help()
@@ -82,7 +86,7 @@ bcube.readfile(args.fileb)
 
 totcube = acube - bcube
 
-outfilename = "diff.cube"
+outfilename = args.diffoutfilename
 
 if os.path.exists(outfilename):
     print "File ", outfilename, " exist, removing it "
@@ -145,7 +149,7 @@ for a in atoms:
         #print dist, a.get_Z()
         plt.text(dist, 0.0, elements.ztosymbol[a.get_Z()], fontdict=font)
 
-outfilename = "cd.eps"
+outfilename = args.outfilename
 
 if os.path.exists(outfilename):
     print "File ", outfilename, " exist, removing it "
