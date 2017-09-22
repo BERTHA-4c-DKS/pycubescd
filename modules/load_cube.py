@@ -505,7 +505,7 @@ class cube(object):
 
       return zmin, zmax
 
-  def get_enclosed_r (self, center):
+  def get_enclosed_r (self, center, axis="N"):
 
       x = center[0]
       y = center[1]
@@ -518,9 +518,34 @@ class cube(object):
       if (x < xmax) and (x > xmin):
           if (y > ymin) and (y < ymax):
               if (z > zmin) and (z < zmax):
-                  rx = min(x - xmin, xmax - x)
-                  ry = min(y - ymin, ymax - y)
-                  rz = min(z - zmin, zmax - z)
+                  if axis == "N":
+                      rx = min(x - xmin, xmax - x)
+                      ry = min(y - ymin, ymax - y)
+                      rz = min(z - zmin, zmax - z)
+                  elif axis == "z":
+                      rx = min(x - xmin, xmax - x)
+                      ry = min(y - ymin, ymax - y)
+                      rz = zmax - z
+                  elif axis == "mz":
+                      rx = min(x - xmin, xmax - x)
+                      ry = min(y - ymin, ymax - y)
+                      rz = z - zmin
+                  elif axis == "y":
+                      rx = min(x - xmin, xmax - x)
+                      ry = ymax - y
+                      rz = min(z - zmin, zmax - z)
+                  elif axis == "my":
+                      rx = min(x - xmin, xmax - x)
+                      ry = y - ymin
+                      rz = min(z - zmin, zmax - z)
+                  elif axis == "x":
+                      rx = xmax - x
+                      ry = min(y - ymin, ymax - y)
+                      rz = min(z - zmin, zmax - z)
+                  elif axis == "mx":
+                      rx = x - xmin
+                      ry = min(y - ymin, ymax - y)
+                      rz = min(z - zmin, zmax - z)
 
                   return min(rx, min(ry, rz))
 

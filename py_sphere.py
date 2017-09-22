@@ -73,7 +73,7 @@ for i in range(len(scs)):
     center[i] = float(scs[i])
     #print center[i] 
 
-rmax = cube.get_enclosed_r(center) 
+rmax = cube.get_enclosed_r(center, axis) 
 
 nstep = int(rmax/dr) - 1
 
