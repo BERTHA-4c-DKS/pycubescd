@@ -35,3 +35,9 @@ py_spherical.py: Generalized the idea of the isodensity: spatial grid is assegne
 pyadd_cube.py : simple tool to add two cubes
 
 pysub_cube.py : simple tool to subtract two cubes
+
+py_central.py : integrate the difference using a sphere or a semi-sphere or even a 
+                cone 
+
+py_sphere.py : integrate a cube using a sphere or a semi-sphere or even a cone 
+               similar to py_central.py but using a single cube 
