@@ -46,7 +46,7 @@ parser.add_argument("-p","--plotoutfilename", help="EPS output filename", \
 parser.add_argument("-o","--outfilename", help="text output filename", \
         required=False, type=str, default="out.txt")
 parser.add_argument("-d","--diffoutfilename", help="Cube difference output filename", \
-        required=False, type=str, default="diff.eps")
+        required=False, type=str, default="diff.txt")
 
 if len(sys.argv) == 1:
     parser.print_help()
