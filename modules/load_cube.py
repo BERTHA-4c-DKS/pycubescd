@@ -574,9 +574,12 @@ class cube(object):
           newtrip = trip
           if axis == "x":
               if angle >= 90:
-                  newdist = dist[( xval > 0.0)]
-                  newtrip = trip[( xval > 0.0)]
+                  newdist = dist[( xval > center[0])]
+                  newtrip = trip[( xval > center[0])]
               else:
+                  if center[0] != 0.0 or center[1] != 0.0 or center[2] != 0.0 :
+                      return None
+
                   normvectors = numpy.array([numpy.linalg.norm(v) for v in vectors]) 
                   dotprod = numpy.array([(v[0]*1.0 + v[1]*0.0 + v[2]*0.0) for v in vectors])
                   cosangle = dotprod/normvectors
@@ -586,9 +589,12 @@ class cube(object):
                   newtrip = trip[( xval > 0.0) & (angles <= angle)]
           elif axis == "mx":
               if angle >= 90 :
-                  newdist = dist[( xval < 0.0)]
-                  newtrip = trip[( xval < 0.0)]
+                  newdist = dist[( xval < center[0])]
+                  newtrip = trip[( xval < center[0])]
               else:
+                  if center[0] != 0.0 or center[1] != 0.0 or center[2] != 0.0 :
+                      return None
+
                   normvectors = numpy.array([numpy.linalg.norm(v) for v in vectors]) 
                   dotprod = numpy.array([(v[0]*-1.0 + v[1]*0.0 + v[2]*0.0) for v in vectors])
                   cosangle = dotprod/normvectors
@@ -598,9 +604,12 @@ class cube(object):
                   newtrip = trip[( xval < 0.0) & (angles <= angle)]
           elif axis == "y":
               if angle >= 90 :
-                  newdist = dist[( yval > 0.0)]
-                  newtrip = trip[( yval > 0.0)]
+                  newdist = dist[( yval > center[1])]
+                  newtrip = trip[( yval > center[1])]
               else:
+                  if center[0] != 0.0 or center[1] != 0.0 or center[2] != 0.0 :
+                      return None
+
                   normvectors = numpy.array([numpy.linalg.norm(v) for v in vectors]) 
                   dotprod = numpy.array([(v[0]*0.0 + v[1]*1.0 + v[2]*0.0) for v in vectors])
                   cosangle = dotprod/normvectors
@@ -610,9 +619,12 @@ class cube(object):
                   newtrip = trip[( yval > 0.0) & (angles <= angle)]
           elif axis == "my":
               if angle >= 90 :
-                  newdist = dist[( yval < 0.0)]
-                  newtrip = trip[( yval < 0.0)]
+                  newdist = dist[( yval < center[1])]
+                  newtrip = trip[( yval < center[1])]
               else:
+                  if center[0] != 0.0 or center[1] != 0.0 or center[2] != 0.0 :
+                      return None
+
                   normvectors = numpy.array([numpy.linalg.norm(v) for v in vectors]) 
                   dotprod = numpy.array([(v[0]*0.0 + v[1]*-1.0 + v[2]*0.0) for v in vectors])
                   cosangle = dotprod/normvectors
@@ -622,9 +634,12 @@ class cube(object):
                   newtrip = trip[( yval < 0.0) & (angles <= angle)]
           elif axis == "z":
               if angle >= 90 :
-                  newdist = dist[( zval > 0.0)]
-                  newtrip = trip[( zval > 0.0)]
+                  newdist = dist[( zval > center[2])]
+                  newtrip = trip[( zval > center[2])]
               else:
+                  if center[0] != 0.0 or center[1] != 0.0 or center[2] != 0.0 :
+                      return None
+
                   normvectors = numpy.array([numpy.linalg.norm(v) for v in vectors]) 
                   dotprod = numpy.array([(v[0]*0.0 + v[1]*0.0 + v[2]*1.0) for v in vectors])
                   cosangle = dotprod/normvectors
@@ -634,9 +649,12 @@ class cube(object):
                   newtrip = trip[( zval > 0.0) & (angles <= angle)]
           elif axis == "mz":
               if angle >= 90 :
-                  newdist = dist[( zval < 0.0)]
-                  newtrip = trip[( zval < 0.0)]
+                  newdist = dist[( zval < center[2])]
+                  newtrip = trip[( zval < center[2])]
               else:
+                  if center[0] != 0.0 or center[1] != 0.0 or center[2] != 0.0 :
+                      return None
+
                   normvectors = numpy.array([numpy.linalg.norm(v) for v in vectors]) 
                   dotprod = numpy.array([(v[0]*0.0 + v[1]*0.0 + v[2]*-1.0) for v in vectors])
                   cosangle = dotprod/normvectors
