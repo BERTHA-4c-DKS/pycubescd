@@ -132,7 +132,7 @@ for i in range(0, len(rv)):
     fp.write(str(r) + " " + str(numpy.sum( rv[:i] ) * dr) \
             + " " + str(rv[i]) + "\n")
     #cd.append([r , numpy.sum( rv[:i] ) * 4.0 * math.pi * r**2 * dr, rv[i]])
-    cd.append([r , numpy.sum( rv[:i] ) * dr, rv[i]])
+    cd.append([r , numpy.sum( rv[:i] ), rv[i]])
     r = r + dr
 
 fp.close()
