@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-IMPORt numpy  
+import numpy  
 import argparse
 import copy 
 import os.path
