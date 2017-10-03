@@ -100,7 +100,7 @@ cd = []
 r = 0.0
 for i in range(0, len(rv)):
     #print r , numpy.sum( rv[:i] ) * dr, rv[i]
-    fp.write(str(r) + " " + str(numpy.sum( rv[:i] ) * dr) \
+    fp.write(str(r) + " " + str(numpy.sum( rv[:i] ) ) \
             + " " + str(rv[i]) + "\n")
     #cd.append([r , numpy.sum( rv[:i] ) * 4.0 * math.pi * r**2 * dr, rv[i]])
     cd.append([r , numpy.sum( rv[:i] ), rv[i]])
