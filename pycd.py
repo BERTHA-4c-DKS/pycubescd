@@ -20,9 +20,9 @@ parser.add_argument("-i","--isodensitypoint", \
 parser.add_argument("-v", "--verbose", help="increase output verbosity", default=False, \
         action="store_true")
 parser.add_argument("-o","--outfilename", help="text output filename", \
-        required=False, type=str, default="out.txt")
+        required=False, type=str, default="")
 parser.add_argument("-p","--plotoutfilename", help="EPS output filename", \
-        required=False, type=str, default="cd.eps")
+        required=False, type=str, default="")
 
 
 if len(sys.argv) == 1:
@@ -47,6 +47,9 @@ mycube = load_cube.cube()
 mycube.readfile (args.file)
 
 outfilename = args.outfilename
+
+if outfilename == "":
+    outfilename = args.file + "_cd" +args.axis + ".txt"
 
 if os.path.exists(outfilename):
     print "File ", outfilename, " exist, removing it "
@@ -88,7 +91,10 @@ if args.isodensitypoint is not None:
    
 plt.plot(x,y)
 #plt.show()
+
 outfilename = args.plotoutfilename
+if outfilename == "":
+    outfilename = args.file + "_cd" +args.axis + ".eps"
 
 if os.path.exists(outfilename):
     print "File ", outfilename, " exist, removing it "
@@ -99,4 +105,4 @@ plt.savefig(outfilename)
 
 integral = mycube.integrate()
 
-print (integral)
+print "Integral value: ", integral
