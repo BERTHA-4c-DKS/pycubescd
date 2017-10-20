@@ -19,6 +19,11 @@ parser.add_argument("-i","--isodensitypoint", \
         "An interpolation procedure is used.", type=float)
 parser.add_argument("-v", "--verbose", help="increase output verbosity", default=False, \
         action="store_true")
+parser.add_argument("-o","--outfilename", help="text output filename", \
+        required=False, type=str, default="out.txt")
+parser.add_argument("-p","--plotoutfilename", help="EPS output filename", \
+        required=False, type=str, default="cd.eps")
+
 
 if len(sys.argv) == 1:
     parser.print_help()
@@ -41,23 +46,24 @@ print('Reading ' + args.file)
 mycube = load_cube.cube()
 mycube.readfile (args.file)
 
-outfilename = args.file + '_cd'+args.axis
+outfilename = args.outfilename
 
 if os.path.exists(outfilename):
     print "File ", outfilename, " exist, removing it "
     os.remove(outfilename)
 
+print "Writing ... " + outfilename
+
 if (args.axis == 'z'):
-            cddata = mycube.cdz(outfilename)
+    cddata = mycube.cdz(outfilename)
 
 if (args.axis == 'y'):
-            cddata = mycube.cdy(outfilename)
+    cddata = mycube.cdy(outfilename)
 
 if (args.axis == 'x'):
-            cddata = mycube.cdx(outfilename)
+    cddata = mycube.cdx(outfilename)
 
-
-print(type(args.isodensitypoint))
+#print(type(args.isodensitypoint))
 
 x = np.transpose(np.array(cddata))[0]
 y = np.transpose(np.array(cddata))[1]
@@ -82,7 +88,7 @@ if args.isodensitypoint is not None:
    
 plt.plot(x,y)
 #plt.show()
-outfilename = args.file + '_cd'+args.axis+".eps"
+outfilename = args.plotoutfilename
 
 if os.path.exists(outfilename):
     print "File ", outfilename, " exist, removing it "
