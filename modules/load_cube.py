@@ -421,13 +421,13 @@ class cube(object):
       newd_raw = self.get_rawdata()
 
       for i in range(len(newd_raw)):
-          newd_raw[i] = a.get_rawdata()[i] *\
+          newd_raw[i] = self.get_rawdata()[i] *\
                   b.get_rawdata()[i]
 
       for ix in xrange(self.__nx):
           for iy in xrange(self.__ny):
               for iz in xrange(self.__nz):
-                   newd[ix,iy,iz] = a.get_data()[ix,iy,iz] * \
+                   newd[ix,iy,iz] = self.get_data()[ix,iy,iz] * \
                            b.get_data()[ix,iy,iz] 
 
       retc.set_data(newd)
