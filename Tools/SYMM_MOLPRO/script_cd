@@ -1,0 +1,78 @@
+
+#DIRPYCUBESCD=/home/belp/Repository/pycubescd
+#export PYTHONPATH=$PYTHONPATH:$DIRPYCUBESCD:$DIRPYCUBESCD/modules
+
+DIRPYCUBESCD=/usr/local/pycubescd
+export PYTHONPATH=$PYTHONPATH:$DIRPYCUBESCD:$DIRPYCUBESCD/modules
+
+export  dens_complex_sym1=bene1_density.cube
+export  dens_complex_sym2=bene2_density.cube
+export  dens_complex_sym3=bene3_density.cube
+export  dens_complex=bene_density.cube
+
+export  dens_frag1_sym1=be1_density.cube
+export  dens_frag1_sym2=be2_density.cube
+export  dens_frag1_sym3=be3_density.cube
+export  dens_frag1=be_density.cube
+
+export  dens_frag2_sym1=ne1_density.cube
+export  dens_frag2_sym2=ne2_density.cube
+export  dens_frag2_sym3=ne3_density.cube
+export  dens_frag2=ne_density.cube
+
+
+echo $dens_complex_sym1
+
+###########################################
+
+# diff dens symm 1 #
+
+python $DIRPYCUBESCD/pysub_cube.pyc -f1 $dens_complex_sym1 -f2 $dens_frag1_sym1 -o tmp.cub 
+python $DIRPYCUBESCD/pysub_cube.pyc -f1 tmp.cub -f2 $dens_frag2_sym1            -o dif_sym1.cub
+
+
+# diff dens symm 2 #
+
+python $DIRPYCUBESCD/pysub_cube.pyc -f1 $dens_complex_sym2 -f2 $dens_frag1_sym2 -o tmp.cub 
+python $DIRPYCUBESCD/pysub_cube.pyc -f1 tmp.cub -f2 $dens_frag2_sym2            -o dif_sym2.cub
+
+# diff dens symm 3 #
+
+python $DIRPYCUBESCD/pysub_cube.pyc -f1 $dens_complex_sym3 -f2 $dens_frag1_sym3 -o tmp.cub 
+python $DIRPYCUBESCD/pysub_cube.pyc -f1 tmp.cub -f2 $dens_frag2_sym3            -o dif_sym3.cub
+
+
+# diff dens total #
+
+python $DIRPYCUBESCD/pysub_cube.pyc -f1 $dens_complex  -f2 $dens_frag1 -o tmp.cub
+
+python $DIRPYCUBESCD/pysub_cube.pyc -f1 tmp.cub -f2 $dens_frag2                 -o dif_tot.cub
+
+
+
+###########################################
+rm CT_iso.dat CT_new.dat
+
+python  $DIRPYCUBESCD/pydens_iso.pyc -f1 $dens_frag1  -f2 $dens_frag2 -iseed 2.0 -o_iso isofile
+isodat=`awk 'NR==1 {print $4}' isofile`
+
+python  $DIRPYCUBESCD/pycd.pyc -f dif_sym1.cub -i $isodat
+python  $DIRPYCUBESCD/pycd.pyc -f dif_sym2.cub -i $isodat
+python  $DIRPYCUBESCD/pycd.pyc -f dif_sym3.cub -i $isodat
+python  $DIRPYCUBESCD/pycd.pyc -f dif_tot.cub  -i $isodat
+
+
+python  $DIRPYCUBESCD/pyct.pyc -f dif_sym1.cub $dens_frag1   $dens_frag2 
+python  $DIRPYCUBESCD/pyct.pyc -f dif_sym2.cub $dens_frag1   $dens_frag2
+python  $DIRPYCUBESCD/pyct.pyc -f dif_sym3.cub $dens_frag1   $dens_frag2
+python  $DIRPYCUBESCD/pyct.pyc -f dif_tot.cub  $dens_frag1   $dens_frag2
+
+awk '{print $1, $2 }' dif_sym1.cub_cdz.txt > x1
+awk '{print $2  }' dif_sym2.cub_cdz.txt > x2
+awk '{print $2 }' dif_sym3.cub_cdz.txt > x3
+paste x1 x2 x3  > risu
+awk '{print $1, $2+$3+$4 }' risu > sum_sym_cdz.txt
+
+
+
+gnuplot -p plot.gnu

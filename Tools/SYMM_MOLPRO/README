@@ -1,0 +1,6 @@
+Input to generate symmetry separated components of charge rearrangment.
+
+molpro input for the Be-Ne molecule that generate symmetry separeted cubes --> avdz.com
+
+script that use pycubescd  to evaluate the related CD curves --> script
+
