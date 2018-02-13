@@ -79,15 +79,17 @@ if args.isodensitypoint is not None:
    print(isovalue,ct)
    dq_interpolated = interp1d(x, y, kind = 'linear')
    ct = dq_interpolated(isovalue)
+
+   f = open('CT_iso.dat',"a")
+   f.write("isovalue:%e  CT_iso:%e %s\n" % (isovalue, ct,args.file))
+   f.close()
+
    plt.plot(isovalue, ct)
    print(isovalue, ct)
    text = '('+str(isovalue)+',' + str(ct) + ')'
    plt.annotate(text, xy=(isovalue,ct), xytext=(isovalue+3.,ct), \
            arrowprops=dict(facecolor='black', shrink=0.05))
 
-   f = open('CT_iso.dat',"a")
-   f.write("isovalue:%e  CT_iso:%e %s\n" % (isovalue, ct,args.file))
-   f.close()
    
 plt.plot(x,y)
 #plt.show()
