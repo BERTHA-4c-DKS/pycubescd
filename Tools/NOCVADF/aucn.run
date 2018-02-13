@@ -1,0 +1,362 @@
+#!/bin/ksh
+#PBS -N symmblyp
+#PBS -lcput=488:00:00
+#PBS -lnodes=sc05:ppn=4
+#PBS -lmem=100Mb
+#
+######################################
+WRK=/scratch/$USER.$PBS_JOBID
+#####################################
+
+PYCD=/usr/local/pycubescd
+
+
+SCM_MACHINEFILE=$PBS_NODEFILE
+export SCM_MACHINEFILE
+
+. /usr/local/adf2014.09.r47686/adfrc.sh
+
+export SCM_TMPDIR=$WRK
+export P4_GLOBMEMSIZE=8388608
+export MPI_REMSH=rsh
+
+cd $WRK
+
+
+$ADFBIN/adf -n 4 <<eor
+Title  fragment1 
+NoPrint sfo,frag,functions
+Units
+  length Angstrom 
+End
+
+Atoms
+Ta         0.00000        0.00000        0.00000
+Cl         0.39861       -2.29537        0.54307
+Cl        -2.29609       -0.34613        0.50886
+Cl         2.31222        0.32976        0.59127
+Cl        -0.29482        2.31143        0.55978
+End
+
+CHARGE  1
+
+symmetry NOSYM
+Basis
+Type TZ2P
+core large 
+End
+XC
+  GGA  becke perdew
+End
+Relativistic Scalar ZORA
+End Input
+eor
+
+mv TAPE21 frag1.t21
+rm logfile
+
+
+$ADFBIN/adf -n 4  <<eor
+title  Fragment2 
+noprint sfo,frag,functions
+units
+  length   Angstrom
+end
+ATOMS
+C          0.00000       -0.00000        2.17638
+N         -0.02175       -0.01066        3.31506
+C          1.10854       -0.51704       -2.18477
+C         -0.16940       -1.16221       -2.26582
+C         -1.15971       -0.18084       -2.28652
+C         -0.54388        1.05914       -2.22573
+C          0.86468        0.87532       -2.16000
+C         -0.09555       -0.04907        4.70997
+C          0.51188        0.97066        5.43981
+C          0.40359        0.89844        6.83035
+C         -0.25225       -0.15616        7.42042
+C         -0.84151       -1.15764        6.65865
+C         -0.77833       -1.13554        5.28880
+C          1.93152        1.97021       -2.24952
+H          1.56396        2.87870       -1.75851
+H          2.14655        2.18553       -3.30174
+H          2.84640        1.62957       -1.75157
+C         -1.27518        2.39232       -2.40732
+H         -0.70237        3.19177       -1.92347
+H         -2.26976        2.32832       -1.95226
+H         -1.37528        2.61090       -3.47649
+C         -2.65088       -0.41268       -2.54639
+H         -3.23042        0.40285       -2.09884
+H         -2.95532       -1.36531       -2.09912
+H         -2.83302       -0.44104       -3.62758
+C         -0.44345       -2.65390       -2.47306
+H          0.34707       -3.24095       -1.99127
+H         -0.46241       -2.87635       -3.54509
+H         -1.41180       -2.91246       -2.02930
+C          2.45054       -1.24568       -2.28693
+H          3.22135       -0.66838       -1.76273
+H          2.72907       -1.35354       -3.34119
+H          2.36365       -2.23767       -1.82861
+C          1.21205        2.14801        4.75619
+H          1.65292        2.80279        5.51662
+H          0.48351        2.71420        4.16521
+H          2.00345        1.77039        4.09788
+C         -1.42107       -2.22532        4.42764
+H         -1.03840       -2.15530        3.40297
+H         -2.50879       -2.09239        4.42056
+H         -1.17601       -3.21042        4.84161
+H          0.83050        1.64138        7.42025
+H         -0.31060       -0.19524        8.41777
+H         -1.32509       -1.91754        7.09399
+end
+CHARGE -1 
+symmetry NOSYM
+
+Basis
+Type TZ2P
+core Large 
+End
+xc
+  GGA  becke perdew
+end
+relativistic scalar ZORA
+end input
+eor
+
+mv TAPE21 frag2.t21
+rm logfile
+
+$ADFBIN/adf -n 4  <<eor > tot.out
+title  Complex 
+units
+  length Angstrom
+end
+EPRINT
+  SFO eig ovl
+END
+xc
+  GGA  becke perdew
+end
+relativistic scalar ZORA
+ATOMS
+Ta         0.00000        0.00000        0.00000  f=frag1
+Cl         0.39861       -2.29537        0.54307  f=frag1 
+Cl        -2.29609       -0.34613        0.50886  f=frag1
+Cl         2.31222        0.32976        0.59127  f=frag1
+Cl        -0.29482        2.31143        0.55978  f=frag1
+C          0.00000       -0.00000        2.17638  f=frag2
+N         -0.02175       -0.01066        3.31506  f=frag2
+C          1.10854       -0.51704       -2.18477  f=frag2
+C         -0.16940       -1.16221       -2.26582  f=frag2
+C         -1.15971       -0.18084       -2.28652  f=frag2
+C         -0.54388        1.05914       -2.22573  f=frag2
+C          0.86468        0.87532       -2.16000  f=frag2
+C         -0.09555       -0.04907        4.70997  f=frag2
+C          0.51188        0.97066        5.43981  f=frag2
+C          0.40359        0.89844        6.83035  f=frag2
+C         -0.25225       -0.15616        7.42042  f=frag2
+C         -0.84151       -1.15764        6.65865  f=frag2
+C         -0.77833       -1.13554        5.28880  f=frag2
+C          1.93152        1.97021       -2.24952  f=frag2
+H          1.56396        2.87870       -1.75851  f=frag2
+H          2.14655        2.18553       -3.30174  f=frag2
+H          2.84640        1.62957       -1.75157  f=frag2
+C         -1.27518        2.39232       -2.40732  f=frag2
+H         -0.70237        3.19177       -1.92347  f=frag2
+H         -2.26976        2.32832       -1.95226  f=frag2
+H         -1.37528        2.61090       -3.47649  f=frag2
+C         -2.65088       -0.41268       -2.54639  f=frag2
+H         -3.23042        0.40285       -2.09884  f=frag2
+H         -2.95532       -1.36531       -2.09912  f=frag2
+H         -2.83302       -0.44104       -3.62758  f=frag2
+C         -0.44345       -2.65390       -2.47306  f=frag2
+H          0.34707       -3.24095       -1.99127  f=frag2
+H         -0.46241       -2.87635       -3.54509  f=frag2
+H         -1.41180       -2.91246       -2.02930  f=frag2
+C          2.45054       -1.24568       -2.28693  f=frag2
+H          3.22135       -0.66838       -1.76273  f=frag2
+H          2.72907       -1.35354       -3.34119  f=frag2
+H          2.36365       -2.23767       -1.82861  f=frag2
+C          1.21205        2.14801        4.75619  f=frag2
+H          1.65292        2.80279        5.51662  f=frag2
+H          0.48351        2.71420        4.16521  f=frag2
+H          2.00345        1.77039        4.09788  f=frag2
+C         -1.42107       -2.22532        4.42764  f=frag2
+H         -1.03840       -2.15530        3.40297  f=frag2
+H         -2.50879       -2.09239        4.42056  f=frag2
+H         -1.17601       -3.21042        4.84161  f=frag2
+H          0.83050        1.64138        7.42025  f=frag2
+H         -0.31060       -0.19524        8.41777  f=frag2
+H         -1.32509       -1.91754        7.09399  f=frag2
+end
+
+symmetry NOSYM
+CHARGE 0
+
+fragments
+  frag1 frag1.t21
+  frag2   frag2.t21
+end
+
+ETSNOCV
+PRINT ETSLOWDIN
+
+save TAPE41
+
+end input
+eor
+
+cp TAPE21 tot.t21
+cp tot.out $PBS_O_WORKDIR
+cp tot.t21  $PBS_O_WORKDIR
+
+$ADFBIN/densf << eor
+NOCV
+THRESH 0.05
+END
+CUBINPUT
+CUBOUTPUT  $WRK/orb1
+grid
+-7.279 -7.279 -7.279
+100  100  100 
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03 
+end
+end input
+eor
+
+
+
+
+################  Data for locating isodensity boundary   ##########
+
+$ADFBIN/densf << eor
+INPUTFILE frag1.t21
+CUBINPUT
+Density SCF
+CUBOUTPUT  $WRK/desfrag1
+grid
+-7.279 -7.279 -7.279
+100  100  100
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03
+end
+end input
+eor
+
+cp desfrag1%SCF%Density.cub dens_frag1.cub
+
+$ADFBIN/densf << eor
+INPUTFILE frag2.t21
+CUBINPUT
+Density SCF
+CUBOUTPUT  $WRK/desfrag2
+grid
+-7.279 -7.279 -7.279
+100  100  100
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03
+end
+end input
+eor
+
+cp desfrag2%SCF%Density.cub dens_frag2.cub
+
+$ADFBIN/densf << eor
+INPUTFILE tot.t21
+CUBINPUT
+Density SCF
+CUBOUTPUT  $WRK/destot
+grid
+-7.279 -7.279 -7.279
+100  100  100
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03
+end
+end input
+eor
+
+cp destot%SCF%Density.cub dens_tot.cub
+
+$ADFBIN/densf << eor
+INPUTFILE tot.t21
+CUBINPUT
+Density SCF
+CUBOUTPUT  $WRK/destot
+grid
+-7.279 -7.279 -7.279
+100  100  100
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03
+end
+end input
+eor
+
+cp destot%SCF%Density.cub dens_tot.cub
+
+
+$ADFBIN/densf << eor
+INPUTFILE tot.t21
+CUBINPUT
+Density ortho
+CUBOUTPUT  $WRK/desfragortho
+grid
+-7.279 -7.279 -7.279
+100  100  100
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03
+end
+end input
+eor
+
+cp desfragortho%SCF%Density.cub desfragortho.cub
+
+
+
+#cp dens_frag1.cub       $PBS_O_WORKDIR
+#cp dens_frag2.cub       $PBS_O_WORKDIR
+#cp dens_tot.cub         $PBS_O_WORKDIR
+#cp desfragortho.cub      $PBS_O_WORKDIR
+
+python $PYCD/pysub_cube.pyc -f1 dens_tot.cub -f2 desfragortho.cub -o diff_totortho.cub
+
+
+################### Find the isodensity value  ###############
+
+python $PYCD/pydens_iso.pyc -f1 dens_frag1.cub -f2 dens_frag2.cub -o_iso isofile
+isodat=`awk '{print $3}' isofile`
+
+
+################### NOCVs ###############
+
+Extract the nocv orbital number with larger positive to be coupled with 1
+
+a=`grep -4 'ETS-NOCV-decomposition: taken restricted  fragments' tot.out | tail -1 | awk '{print  $3}'`
+echo $a
+for i in 1 2 3 4 5 6  ; do
+
+b=`expr "$a" - "$i" + 1`
+
+python $PYCD/pyadd_cube.py  -f1 orb1%NOCV%Densities_A_$i.cub -f2 orb1%NOCV%Densities_A_$b.cub -o nocv$i.cub
+
+
+python $PYCD/pycd.pyc -f nocv$i.cub  --isodensitypoint   $isodat
+
+done
+
+################### TOT_ORTHO ###############
+
+python $PYCD/pycd.pyc -f diff_totortho.cub --isodensitypoint   $isodat
+
+cp nocv* $PBS_O_WORKDIR
+cp C*   $PBS_O_WORKDIR
+#cp  orb1%NOCV%Densities* $PBS_O_WORKDIR
+
+
+exit 0
+
