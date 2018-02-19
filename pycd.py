@@ -23,6 +23,8 @@ parser.add_argument("-o","--outfilename", help="text output filename", \
         required=False, type=str, default="")
 parser.add_argument("-p","--plotoutfilename", help="EPS output filename", \
         required=False, type=str, default="")
+parser.add_argument("-c","--cut", help="Cut values higher than ..", \
+        required=False, type=float, default=None)
 
 
 if len(sys.argv) == 1:
@@ -57,14 +59,65 @@ if os.path.exists(outfilename):
 
 print "Writing ... " + outfilename
 
+dd = 0.0
 if (args.axis == 'z'):
     cddata = mycube.cdz(outfilename)
+    dd = mycube.get_dz()
 
 if (args.axis == 'y'):
     cddata = mycube.cdy(outfilename)
+    dd = mycube.get_dy()
 
 if (args.axis == 'x'):
     cddata = mycube.cdx(outfilename)
+    dd = mycube.get_dx()
+
+if args.cut != None:
+    howmanypoints = 0
+
+    idx = 0
+    x = []
+    y = []
+    for val in cddata:
+        if (val[2] < args.cut):
+            x.append(val[0])
+            y.append(val[2])
+        else:
+            howmanypoints = howmanypoints + 1
+            if (idx == 0):
+                x.append(val[0])
+                y.append(cddata[idx+1][2])
+            elif (idx == (len(cddata)-1)):
+                x.append(val[0])
+                y.append(cddata[idx-1][2])
+            else:
+                x.append(val[0])
+                newval = (cddata[idx-1][2] + cddata[idx+1][2])/2.0
+                y.append(newval)
+
+        if howmanypoints > 1:
+            print "Only one point can be cut"
+            eixt(1)
+
+        idx = idx + 1
+
+    cddatanew = []
+
+    for idx in range(len(x)):
+        cddatanew.append([x[idx], np.sum( y[:idx] ) * dd ,y[idx]])
+
+    cddata = cddatanew
+
+    if os.path.exists(outfilename):
+        os.remove(outfilename)
+
+    f = open(outfilename,'w')
+
+    for val in cddata:
+        f.write(('%e %e %e \n') % (val[0], val[1], val[2]))
+
+    f.close()
+
 
 #print(type(args.isodensitypoint))
 
