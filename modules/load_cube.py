@@ -296,6 +296,46 @@ class cube(object):
 
       return None
 
+  def integrate_positive (self, axis=""):
+
+      positive_data = self.__data.clip(min=0.0)
+
+      if axis == "":
+          itgr = numpy.sum(positive_data) * self.get_dx() * self.get_dy() * \
+                  self.get_dz()
+          return itgr
+      elif axis == "z":
+          itgr = numpy.sum(positive_data, axis=(0,1)) * self.get_dx() * self.get_dy()
+          return itgr
+      elif axis == "x":
+          itgr = numpy.sum(positive_data, axis=(1,2)) * self.get_dy() * self.get_dz()
+          return itgr
+      elif axis == "y":
+          itgr = numpy.sum(positive_data, axis=(0,2)) * self.get_dx() * self.get_dz()
+          return itgr
+
+      return None
+
+  def integrate_negative (self, axis=""):
+
+      negative_data = self.__data.clip(max=0.0)
+
+      if axis == "":
+          itgr = numpy.sum(negative_data) * self.get_dx() * self.get_dy() * \
+                  self.get_dz()
+          return itgr
+      elif axis == "z":
+          itgr = numpy.sum(negative_data, axis=(0,1)) * self.get_dx() * self.get_dy()
+          return itgr
+      elif axis == "x":
+          itgr = numpy.sum(negative_data, axis=(1,2)) * self.get_dy() * self.get_dz()
+          return itgr
+      elif axis == "y":
+          itgr = numpy.sum(negative_data, axis=(0,2)) * self.get_dx() * self.get_dz()
+          return itgr
+
+      return None
+
   def get_volume(self):
 
       vol = (self.__nx - 1) * self.get_x() * \
