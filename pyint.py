@@ -55,13 +55,16 @@ if os.path.exists(outfilename):
 print "Writing ... " + outfilename
 
 if (args.axis == 'z'):
-    cddata = mycube.cdz_set_all_positive(outfilename)
+    #cddata = mycube.cdz_set_all_positive(outfilename)
+    cddata = mycube.cdz(outfilename)
 
 if (args.axis == 'y'):
-    cddata = mycube.cdy_set_all_positive(outfilename)
+    #cddata = mycube.cdy_set_all_positive(outfilename)
+    cddata = mycube.cdy(outfilename)
 
 if (args.axis == 'x'):
-    cddata = mycube.cdx_set_all_positive(outfilename)
+    #cddata = mycube.cdx_set_all_positive(outfilename)
+    cddata = mycube.cdx(outfilename)
 
 #print(type(args.isodensitypoint))
 
