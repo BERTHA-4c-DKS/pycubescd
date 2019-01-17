@@ -205,17 +205,79 @@ class cube(object):
           return self.cdx(fname)
       elif ax == "y":
           return self.cdy(fname)
- 
+
+  def cdx (self, fname=""):
+      vals = self.integrate("x")
+      
+      return self.__cdx(vals, fname)
+
+  def cdx_positive (self, fname=""):
+      vals = self.integrate_positive("x")
+
+      return self.__cdx(vals, fname)
+
+  def cdx_negative (self, fname=""):
+      vals = self.integrate_negative("x")
+
+      return self.__cdx(vals, fname)
+
+  def cdx_set_all_positive (self, fname=""):
+      vals = self.integrate_set_allpositive("x")
+
+      return self.__cdx(vals, fname)
+
+  def __cdx(self, vals, fname):
+
+      cd = []
+      xmin = self.get_origin()[0]
+      dx = self.get_dx()
+      i = 1
+      for v in vals:
+         cd.append([xmin+(i-1)*dx, numpy.sum( vals[:i] ) * dx, v])
+         i = i + 1
+
+      if fname != "":
+         if os.path.exists(fname):
+             os.remove(fname)
+
+         f = open(fname,'w')
+
+         for i in cd:
+             f.write(('%e %e %e \n') % (i[0], i[1], i[2]))
+
+         f.close()
+       
+      return cd
+
   def cdy (self, fname=""):
+      vals = self.integrate("y")
+      
+      return self.__cdy(vals, fname)
+
+  def cdy_positive (self, fname=""):
+      vals = self.integrate_positive("y")
+      
+      return self.__cdy(vals, fname)
+ 
+  def cdy_negative (self, fname=""):
+      vals = self.integrate_negative("y")
+      
+      return self.__cdy(vals, fname)
+
+  def cdy_set_all_positive (self, fname=""):
+      vals = self.integrate_set_allpositive("y")
+
+      return self.__cdy(vals, fname)
+ 
+  def __cdy (self, vals, fname):
       cd = []
 
       ymin = self.get_origin()[1]
       dy = self.get_dy()
-      vals = self.integrate("y")
       i = 1 
       for v in vals:
-          cd.append([ymin+(i-1)*dy, numpy.sum( vals[:i] ) * dy, v])
-          i = i + 1
+         cd.append([ymin+(i-1)*dy, numpy.sum( vals[:i] ) * dy, v])
+         i = i + 1
 
       if fname != "":
          if os.path.exists(fname):
@@ -230,40 +292,35 @@ class cube(object):
       
       return cd
 
-  def cdx (self, fname=""):
-      cd = []
-
-      xmin = self.get_origin()[0]
-      dx = self.get_dx()
-      vals = self.integrate("x")
-      i = 1
-      for v in vals:
-          cd.append([xmin+(i-1)*dx, numpy.sum( vals[:i] ) * dx, v])
-          i = i + 1
-
-      if fname != "":
-         if os.path.exists(fname):
-             os.remove(fname)
-
-         f = open(fname,'w')
-
-         for i in cd:
-             f.write(('%e %e %e \n') % (i[0], i[1], i[2]))
-
-         f.close()
-       
-      return cd
-
   def cdz (self, fname=""):
+      vals = self.integrate("z")
+
+      return self.__cdz(vals, fname)
+
+  def cdz_positive (self, fname=""):
+      vals = self.integrate_positive("z")
+
+      return self.__cdz(vals, fname)
+
+  def cdz_negative (self, fname=""):
+      vals = self.integrate_negative("z")
+
+      return self.__cdz(vals, fname)
+
+  def cdz_set_all_positive (self, fname=""):
+      vals = self.integrate_set_allpositive("z")
+
+      return self.__cdz(vals, fname)
+
+  def __cdz (self, vals, fname=""):
       cd = []
 
       zmin = self.get_origin()[2]
       dz = self.get_dz()
-      vals = self.integrate("z")
       i = 1 
       for v in vals:
-          cd.append([zmin+(i-1)*dz, numpy.sum( vals[:i] ) * dz, v])
-          i = i + 1
+         cd.append([zmin+(i-1)*dz, numpy.sum( vals[:i] ) * dz, v])
+         i = i + 1
 
       if fname != "":
          if os.path.exists(fname):
@@ -278,63 +335,45 @@ class cube(object):
        
       return cd
 
-  def integrate (self, axis=""):
+  def __integrate(self, data, axis):
 
       if axis == "":
-          itgr = numpy.sum(self.__data) * self.get_dx() * self.get_dy() * \
+          itgr = numpy.sum(data) * self.get_dx() * self.get_dy() * \
                   self.get_dz()
           return itgr
       elif axis == "z":
-          itgr = numpy.sum(self.__data, axis=(0,1)) * self.get_dx() * self.get_dy()
+          itgr = numpy.sum(data, axis=(0,1)) * self.get_dx() * self.get_dy()
           return itgr
       elif axis == "x":
-          itgr = numpy.sum(self.__data, axis=(1,2)) * self.get_dy() * self.get_dz()
+          itgr = numpy.sum(data, axis=(1,2)) * self.get_dy() * self.get_dz()
           return itgr
       elif axis == "y":
-          itgr = numpy.sum(self.__data, axis=(0,2)) * self.get_dx() * self.get_dz()
+          itgr = numpy.sum(data, axis=(0,2)) * self.get_dx() * self.get_dz()
           return itgr
 
       return None
+
+  def integrate (self, axis=""):
+
+      return self.__integrate (self.__data, axis)
 
   def integrate_positive (self, axis=""):
 
       positive_data = self.__data.clip(min=0.0)
 
-      if axis == "":
-          itgr = numpy.sum(positive_data) * self.get_dx() * self.get_dy() * \
-                  self.get_dz()
-          return itgr
-      elif axis == "z":
-          itgr = numpy.sum(positive_data, axis=(0,1)) * self.get_dx() * self.get_dy()
-          return itgr
-      elif axis == "x":
-          itgr = numpy.sum(positive_data, axis=(1,2)) * self.get_dy() * self.get_dz()
-          return itgr
-      elif axis == "y":
-          itgr = numpy.sum(positive_data, axis=(0,2)) * self.get_dx() * self.get_dz()
-          return itgr
-
-      return None
+      return self.__integrate (positive_data, axis)
 
   def integrate_negative (self, axis=""):
 
       negative_data = self.__data.clip(max=0.0)
 
-      if axis == "":
-          itgr = numpy.sum(negative_data) * self.get_dx() * self.get_dy() * \
-                  self.get_dz()
-          return itgr
-      elif axis == "z":
-          itgr = numpy.sum(negative_data, axis=(0,1)) * self.get_dx() * self.get_dy()
-          return itgr
-      elif axis == "x":
-          itgr = numpy.sum(negative_data, axis=(1,2)) * self.get_dy() * self.get_dz()
-          return itgr
-      elif axis == "y":
-          itgr = numpy.sum(negative_data, axis=(0,2)) * self.get_dx() * self.get_dz()
-          return itgr
+      return self.__integrate (negative_data, axis)
 
-      return None
+  def integrate_set_allpositive (self, axis=""):
+
+      data = numpy.absolute(self.__data)
+
+      return self.__integrate (data, axis)
 
   def get_volume(self):
 
