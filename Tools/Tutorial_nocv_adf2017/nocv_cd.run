@@ -1,0 +1,270 @@
+#!/bin/ksh
+
+SUBDIR=$PWD
+PYCD=/home/belp/Repository/pycubescd
+PBS_O_WORKDIR=$PWD
+echo $PWD
+
+
+
+. /home/belp/INSTALL/adf2017.109/adfrc.sh
+
+export SCM_TMPDIR=/tmp
+export P4_GLOBMEMSIZE=8388608
+export MPI_REMSH=rsh
+
+WRK=/tmp
+
+cd $WRK
+
+$ADFBIN/adf -n 4 <<eor
+Title  fragment1 
+NoPrint sfo,frag,functions
+Units
+  length Angstrom 
+End
+
+Atoms
+Au        0.000000    0.000000   -0.058267
+End
+
+CHARGE  1
+
+symmetry NOSYM
+Basis
+Type TZ2P
+core large 
+End
+XC
+  GGA  becke perdew
+End
+Relativistic Scalar ZORA
+End Input
+eor
+
+mv TAPE21 frag1.t21
+rm logfile
+
+
+$ADFBIN/adf -n 4  <<eor
+title  Fragment2 
+noprint sfo,frag,functions
+units
+  length   Angstrom
+end
+
+Atoms
+C         0.000000    0.000000    1.878983
+O         0.000000    0.000000    3.008125
+end
+
+CHARGE 0
+symmetry NOSYM
+
+Basis
+Type TZ2P
+core Large 
+End
+xc
+  GGA  becke perdew
+end
+relativistic scalar ZORA
+end input
+eor
+
+mv TAPE21 frag2.t21
+rm logfile
+
+$ADFBIN/adf -n 4  <<eor > tot.out
+title  Complex 
+units
+  length Angstrom
+end
+EPRINT
+  SFO eig ovl
+END
+xc
+  GGA  becke perdew
+end
+relativistic scalar ZORA
+
+ATOMS
+Au        0.000000    0.000000   -0.058267  f=frag1
+C         0.000000    0.000000    1.878983  f=frag2
+O         0.000000    0.000000    3.008125  f=frag2
+end
+
+symmetry NOSYM
+CHARGE 1 
+
+fragments
+  frag1 frag1.t21
+  frag2   frag2.t21
+end
+
+ETSNOCV
+PRINT ETSLOWDIN
+
+save TAPE41
+
+end input
+eor
+
+cp TAPE21 tot.t21
+cp tot.out  $PBS_O_WORKDIR
+cp tot.t21  $PBS_O_WORKDIR
+
+$ADFBIN/densf << eor
+NOCV
+THRESH 0.05
+END
+CUBINPUT
+CUBOUTPUT  $WRK/orb1
+grid
+-7.279 -7.279 -7.279
+150  150  150 
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03 
+end
+end input
+eor
+
+
+
+
+################  Data for locating isodensity boundary   ##########
+
+$ADFBIN/densf << eor
+INPUTFILE frag1.t21
+CUBINPUT
+Density SCF
+CUBOUTPUT  $WRK/desfrag1
+grid
+-7.279 -7.279 -7.279
+150  150  150
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03
+end
+end input
+eor
+
+cp desfrag1%SCF%Density.cub dens_frag1.cub
+
+$ADFBIN/densf << eor
+INPUTFILE frag2.t21
+CUBINPUT
+Density SCF
+CUBOUTPUT  $WRK/desfrag2
+grid
+-7.279 -7.279 -7.279
+150  150  150
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03
+end
+end input
+eor
+
+cp desfrag2%SCF%Density.cub dens_frag2.cub
+
+$ADFBIN/densf << eor
+INPUTFILE tot.t21
+CUBINPUT
+Density SCF
+CUBOUTPUT  $WRK/destot
+grid
+-7.279 -7.279 -7.279
+150  150  150
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03
+end
+end input
+eor
+
+cp destot%SCF%Density.cub dens_tot.cub
+
+$ADFBIN/densf << eor
+INPUTFILE tot.t21
+CUBINPUT
+Density SCF
+CUBOUTPUT  $WRK/destot
+grid
+-7.279 -7.279 -7.279
+150  150  150
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03
+end
+end input
+eor
+
+cp destot%SCF%Density.cub dens_tot.cub
+
+
+$ADFBIN/densf << eor
+INPUTFILE tot.t21
+CUBINPUT
+Density ortho
+CUBOUTPUT  $WRK/desfragortho
+grid
+-7.279 -7.279 -7.279
+150  150  150
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03
+end
+end input
+eor
+
+cp desfragortho%Ortho%Density.cub desfragortho.cub
+cp desfragortho*  $PBS_O_WORKDIR 
+
+
+
+cp dens_frag1.cub       $PBS_O_WORKDIR
+cp dens_frag2.cub       $PBS_O_WORKDIR
+cp dens_tot.cub         $PBS_O_WORKDIR
+cp desfragortho.cub      $PBS_O_WORKDIR
+
+python $PYCD/pysub_cube.py -f1 dens_tot.cub -f2 desfragortho.cub -o diff_totortho.cub
+
+
+################### Find the isodensity value  ###############
+
+python $PYCD/pydens_iso.py -f1 dens_frag1.cub -f2  dens_frag2.cub -iseed 1.0 -o_iso isofile
+isodat=`awk 'NR==1{print $4}' isofile`
+
+
+################### NOCVs ###############
+
+Extract the nocv orbital number with larger positive to be coupled with 1
+
+a=`grep -4 'ETS-NOCV-decomposition: taken restricted  fragments' tot.out | tail -1 | awk '{print  $3}'`
+echo $a
+for i in 1 2 3 4 5 6  ; do
+
+b=`expr "$a" - "$i" + 1`
+
+python $PYCD/pyadd_cube.py  -f1 orb1%NOCV%Densities_A_$i.cub -f2 orb1%NOCV%Densities_A_$b.cub -o nocv$i.cub
+
+
+python $PYCD/pycd.py -f nocv$i.cub  --isodensitypoint   $isodat
+
+done
+
+################### TOT_ORTHO ###############
+
+python $PYCD/pycd.py -f diff_totortho.cub --isodensitypoint   $isodat
+
+cp nocv* $PBS_O_WORKDIR
+cp C*   $PBS_O_WORKDIR
+#cp  orb1%NOCV%Densities* $PBS_O_WORKDIR
+
+cd $PBS_O_WORKDIR
+
+echo 'EXIT'
+exit 0
+

@@ -1,4 +1,4 @@
-for fname in nocv1.cub   ; do
+for fname in xx.cube   ; do
 
   cp $fname this.cube
 
@@ -6,7 +6,7 @@ for fname in nocv1.cub   ; do
   -e "s/_colorp/gray90/g" \
   -e "s/_colorm/red/g" \
   -e "s/_label/$fname/g" \
-  -e "s/_iso/0.001/g" bp_cube.py > cube.py
+  -e "s/_iso/0.002/g" bp_cube.py > cube.py
   pymol cube.py
   mv this.png $fname.png
   rm this.cube
