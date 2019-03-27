@@ -1,0 +1,56 @@
+#!/bin/ksh
+
+SUBDIR=$PWD
+PYCD=/home/belp/Repository/pycubescd
+PBS_O_WORKDIR=$PWD
+echo $PWD
+
+
+
+. /home/belp/INSTALL/adf2017.109/adfrc.sh
+
+export SCM_TMPDIR=/tmp
+export P4_GLOBMEMSIZE=8388608
+export MPI_REMSH=rsh
+
+WRK=/tmp
+
+cd $WRK
+
+$ADFBIN/adf -n 4 <<eor >  $PBS_O_WORKDIR/opt.out
+Title  fragment1 
+NoPrint sfo,frag,functions
+Units
+  length Angstrom 
+End
+
+Atoms
+Au        0.000000    0.000000    2.050536
+C         0.000000    0.609994   -0.370740
+C         0.000000   -0.609994   -0.370740
+H         0.000000   -1.676494   -0.523938
+H         0.000000    1.676494   -0.523938
+End
+
+CHARGE  1 
+
+symmetry C(2V) 
+Basis
+Type TZ2P
+core large 
+End
+XC
+  GGA  becke perdew
+End
+
+Relativistic ZORA SCALAR
+
+Geometry
+Optim
+End
+
+eor
+
+mv TAPE21 $PBS_O_WORKDIR/opt.t21
+rm logfile
+

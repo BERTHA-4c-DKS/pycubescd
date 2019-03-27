@@ -1,0 +1,119 @@
+#!/bin/ksh
+
+PBS_O_WORKDIR=$PWD
+echo $PWD
+
+
+
+. /home/belp/INSTALL/adf2017.109/adfrc.sh
+
+export SCM_TMPDIR=/tmp
+export P4_GLOBMEMSIZE=8388608
+export MPI_REMSH=rsh
+
+WRK=/tmp
+
+cd $WRK
+
+$ADFBIN/adf -n 4 <<eor
+Title  fragment1 
+NoPrint sfo,frag,functions
+Units
+  length Angstrom 
+End
+
+Atoms
+Au        0.000000    0.000000    2.007479
+End
+
+CHARGE  1
+
+symmetry nosym
+Basis
+Type TZ2P
+core large 
+End
+XC
+  GGA  becke perdew
+End
+Relativistic Scalar ZORA
+End Input
+eor
+
+mv TAPE21 frag1.t21
+cp frag1.t21 $PBS_O_WORKDIR
+rm logfile
+
+
+$ADFBIN/adf -n 4  <<eor
+title  Fragment2 
+noprint sfo,frag,functions
+units
+  length   Angstrom
+end
+
+Atoms
+C         0.000000    0.624241   -0.033327
+C         0.000000   -0.624241   -0.033327
+H         0.000000   -1.664131   -0.333997
+H         0.000000    1.664131   -0.333997
+end
+
+CHARGE 0
+symmetry nosym 
+
+Basis
+Type TZ2P
+core Large 
+End
+xc
+  GGA  becke perdew
+end
+relativistic scalar ZORA
+end input
+eor
+
+mv TAPE21 frag2.t21
+cp frag2.t21 $PBS_O_WORKDIR
+rm logfile
+
+$ADFBIN/adf -n 4  <<eor > $PBS_O_WORKDIR/frag_nocv.out
+title  Complex 
+units
+  length Angstrom
+end
+EPRINT
+  SFO eig ovl
+END
+xc
+  GGA  becke perdew
+end
+relativistic scalar ZORA
+
+ATOMS
+Au        0.000000    0.000000    2.007479  f=frag1
+C         0.000000    0.624241   -0.033327  f=frag2
+C         0.000000   -0.624241   -0.033327  f=frag2
+H         0.000000   -1.664131   -0.333997  f=frag2
+H         0.000000    1.664131   -0.333997  f=frag2
+end
+
+symmetry nosym 
+CHARGE 1 
+
+fragments
+  frag1 frag1.t21
+  frag2   frag2.t21
+end
+
+ETSNOCV
+PRINT ETSLOWDIN
+
+
+end input
+eor
+
+cp TAPE21   tot.t21
+cp tot.t21  $PBS_O_WORKDIR
+
+
