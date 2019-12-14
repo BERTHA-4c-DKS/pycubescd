@@ -133,8 +133,7 @@ if os.path.exists(args.outputiso):
     os.remove(args.outputiso)
 
 f = open(args.outputiso, 'w')
-f.write(('Isodensity point at %f a.u. along axis %s \n') % (isodensity_point, args.axis) )
-f.write(('Isodensity value of %f e/(a.u.)^3') % isodensity_value)
+f.write(('Isodensity point at %f a.u. along axis %s Isodensity value of %f e/(a.u.)^3 \n') % (isodensity_point, args.axis, isodensity_value) )
 f.close()
 
 #plt.plot(xpt,ydiff)

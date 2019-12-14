@@ -104,19 +104,12 @@ if args.cut != None:
     cddatanew = []
 
     for idx in range(len(x)):
-        cddatanew.append([x[idx], np.sum( y[:idx] ) * dd ,y[idx]])
+        cddatanew.append([1.0, 1.0 , 1.0])
 
     cddata = cddatanew
 
     if os.path.exists(outfilename):
         os.remove(outfilename)
-
-    f = open(outfilename,'w')
-
-    for val in cddata:
-        f.write(('%e %e %e \n') % (val[0], val[1], val[2]))
-
-    f.close()
 
 
 #print(type(args.isodensitypoint))
