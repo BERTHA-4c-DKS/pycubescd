@@ -4,7 +4,7 @@
 python ../pyadd_cube.py  -f1 rho_a.cube -f2 rho_b.cube -o  rho_a+b.cube
 
 # rho_ab - rho_a+b = drho
-python  ../pysub_cube.py -f1 rho_ab.cube -f2 rho_a+b.cube -o drho.cube
+python ../pysub_cube.py -f1 rho_ab.cube -f2 rho_a+b.cube -o drho.cube
 
 # CD analysis on drho along z
 python  ../pycd.py -f drho.cube -o drho.dsv

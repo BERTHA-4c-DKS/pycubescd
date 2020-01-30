@@ -1,14 +1,15 @@
 # README #
+# REQUIREMENTS#
+You need python, matplotlib, scipy  (Under Ubuntu: sudo apt install python-matplotlib; sudo apt install python-scipy)
 
-SET in your ~/.bashrc the DIRpycubescd variable 
+Need to set in your ~/.bashrc the DIRPYCUBESCD variable 
  
-  DIRPYCUBESCD=....../pycubescd [for example /home/diego/pycubescd]
-  export PYTHONPATH=$PYTHONPATH:$DIRPYCUBESCD:$DIRPYCUBESCD/modules
+DIRPYCUBESCD=......../pycubescd [for example /home/diego/pycubescd]
+export PYTHONPATH=$PYTHONPATH:$DIRPYCUBESCD:$DIRPYCUBESCD/modules
 
 
 CD code and related cubes module
-
-tomcompile it: python -m compileall pyCD.py 
+to compile it: python -m compileall pyCD.py 
 
 pycd.py: Produce a CD curve using a single cube file
 
