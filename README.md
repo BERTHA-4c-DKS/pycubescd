@@ -13,6 +13,8 @@ to compile it: python -m compileall pyCD.py
 
 pycd.py: Produce a CD curve using a single cube file
 
+pycd_simple.py: Produce a CD curve using a single cube file. It works also WITHOUT the "matplotlib" and "scypy" modules 
+
 pybader.py: Used to evaluate the partial integral of an 
             integrand in cube format on a Bader's volume mapped 
             on cube.
