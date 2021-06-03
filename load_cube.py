@@ -113,7 +113,7 @@ class cube(object):
               i += 1
       
       if i != self.__nx * self.__ny * self.__nz: 
-          raise SizeError, "Errore while reading cube file"
+          raise SizeError("Errore while reading cube file")
 
 
   def clear(self):
@@ -319,9 +319,9 @@ class cube(object):
       for a in self.__atoms:
           str += a.get_str() + "\n"
       
-      for ix in xrange(self.__nx):
-          for iy in xrange(self.__ny):
-              for iz in xrange(self.__nz):
+      for ix in range(self.__nx):
+          for iy in range(self.__ny):
+              for iz in range(self.__nz):
                    str += "%.5e \n"% self.__data[ix,iy,iz]
       
       return str
@@ -334,7 +334,7 @@ class cube(object):
          (self.get_origin()[0] != b.get_origin()[0]) or \
          (self.get_origin()[1] != b.get_origin()[1]) or \
          (self.get_origin()[2] != b.get_origin()[2]):
-        raise SizeError, "cubes are not compatible"
+        raise SizeError("cubes are not compatible")
       
       retc = cube()
 
@@ -349,9 +349,9 @@ class cube(object):
       for i in range(len(newd_raw)):
           newd_raw[i] += b.get_rawdata()[i]
 
-      for ix in xrange(self.__nx):
-          for iy in xrange(self.__ny):
-              for iz in xrange(self.__nz):
+      for ix in range(self.__nx):
+          for iy in range(self.__ny):
+              for iz in range(self.__nz):
                    newd[ix,iy,iz] += b.get_data()[ix,iy,iz] 
 
       retc.set_data(newd)
@@ -371,7 +371,7 @@ class cube(object):
          (self.get_origin()[0] != b.get_origin()[0]) or \
          (self.get_origin()[1] != b.get_origin()[1]) or \
          (self.get_origin()[2] != b.get_origin()[2]):
-        raise SizeError, "cubes are not compatible"
+        raise SizeError("cubes are not compatible")
       
       retc = cube()
 
@@ -386,9 +386,9 @@ class cube(object):
       for i in range(len(newd_raw)):
           newd_raw[i] -= b.get_rawdata()[i]
 
-      for ix in xrange(self.__nx):
-          for iy in xrange(self.__ny):
-              for iz in xrange(self.__nz):
+      for ix in range(self.__nx):
+          for iy in range(self.__ny):
+              for iz in range(self.__nz):
                    newd[ix,iy,iz] -= b.get_data()[ix,iy,iz] 
 
       retc.set_data(newd)
@@ -408,7 +408,7 @@ class cube(object):
          (self.get_origin()[0] != b.get_origin()[0]) or \
          (self.get_origin()[1] != b.get_origin()[1]) or \
          (self.get_origin()[2] != b.get_origin()[2]):
-        raise SizeError, "cubes are not compatible"
+        raise SizeError("cubes are not compatible")
       
       retc = cube()
 
@@ -424,9 +424,9 @@ class cube(object):
           newd_raw[i] = self.get_rawdata()[i] *\
                   b.get_rawdata()[i]
 
-      for ix in xrange(self.__nx):
-          for iy in xrange(self.__ny):
-              for iz in xrange(self.__nz):
+      for ix in range(self.__nx):
+          for iy in range(self.__ny):
+              for iz in range(self.__nz):
                    newd[ix,iy,iz] = self.get_data()[ix,iy,iz] * \
                            b.get_data()[ix,iy,iz] 
 
@@ -448,8 +448,8 @@ class cube(object):
 
   def dump(self, f):
 
-      print >> f, "cube file\ngenerated"
-      print >> f, self.get_str()
+      print("cube file\ngenerated", file=f)
+      print(self.get_str(), file=f)
 
   def to_xyz (self, fname = "toXYZ.out"):
 
@@ -756,17 +756,17 @@ class cube(object):
       m = 0 * self.__data
       ixmin = int(math.ceil((cx-r)/self.__x[0]))
       ixmax = int(math.floor((cx+r)/self.__x[0]))
-      for ix in xrange(ixmin, ixmax):
+      for ix in range(ixmin, ixmax):
           ryz = math.sqrt(r**2-(ix*self.__x[0]-cx)**2)
           iymin = int(math.ceil((cy-ryz)/self.__y[1]))
           iymax = int(math.floor((cy+ryz)/self.__y[1]))
         
-          for iy in xrange(iymin, iymax):
+          for iy in range(iymin, iymax):
               rz = math.sqrt(ryz**2 - (iy*self.__y[1]-cy)**2)
               izmin = int(math.ceil((cz-rz)/self.__z[2]))
               izmax = int(math.floor((cz+rz)/self.__z[2])) 
         
-              for iz in xrange (izmin, izmax):
+              for iz in range (izmin, izmax):
                   m[ix,iy,iz] = 1
         
       return m
