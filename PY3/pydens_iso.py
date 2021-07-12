@@ -48,7 +48,7 @@ if not (os.path.isfile(args.filefrag1)):
     exit(1)
 
 mycube.readfile(args.filefrag1)
-x, y, z = np.array(mycube.get_grid_xyz())
+x, y, z = np.array(mycube.get_grid_xyz(),dtype=object)
 
 data = mycube.get_data()
 
@@ -65,7 +65,7 @@ if not (os.path.isfile(args.filefrag2)):
 
 
 mycube.readfile(args.filefrag2)
-x2,y2,z2 = np.array(mycube.get_grid_xyz())
+x2,y2,z2 = np.array(mycube.get_grid_xyz(),dtype=object)
 data = mycube.get_data()
 
 print(('Interpolating...' + args.filefrag2))
