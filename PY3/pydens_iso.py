@@ -52,38 +52,8 @@ x, y, z = np.array(mycube.get_grid_xyz())
 
 data = mycube.get_data()
 
-# This is for fixing the range of sampling point (info arises from the cube grid)
-nump = 40000   # Fix number of sampling points
-
-if (args.axis == 'z'):
-
-     xpt1 = np.zeros(nump)
-     xpt2 = np.zeros(nump)
-     xpt3 = np.linspace(np.min(z),np.max(z),nump)
-     xpt  = xpt3
-
-elif (args.axis == 'y'):
-
-     xpt1 = np.zeros(nump)
-     xpt2 = np.linspace(np.min(y),np.max(y),nump) 
-     xpt3 = np.zeros(nump)
-     xpt  = xpt2
-
-elif (args.axis == 'x'):
-             
-     xpt1 = np.linspace(np.min(x),np.max(x),nump)
-     xpt2 = np.zeros(nump)
-     xpt3 = np.zeros(nump)
-     xpt  = xpt1
-
-print(('info... of sampling (nump, args.axis)', nump, args.axis))
-
 print(('Interpolating...' + args.filefrag1))
-my_interpolating_function = RegularGridInterpolator((x,y,z),data, method ='linear')
-#my_interpolating_function = RegularGridInterpolator((x,y,z),data, method ='nearest') 
-
-pts = np.transpose([xpt1,xpt2,xpt3])
-y1 = my_interpolating_function(pts)
+my_interpolating_function1 = RegularGridInterpolator((x,y,z),data, method ='linear')
 
 print(('Reading...' + args.filefrag2))
 mycube = load_cube.cube()
@@ -92,13 +62,73 @@ if not (os.path.isfile(args.filefrag2)):
     print("File ", args.filefrag2, " does not exist ")
     exit(1)
 
+
+
 mycube.readfile(args.filefrag2)
-x,y,z = np.array(mycube.get_grid_xyz())
+x2,y2,z2 = np.array(mycube.get_grid_xyz())
 data = mycube.get_data()
 
 print(('Interpolating...' + args.filefrag2))
-my_interpolating_function = RegularGridInterpolator((x,y,z),data, method ='linear')
-y2 = my_interpolating_function(pts)
+my_interpolating_function2 = RegularGridInterpolator((x2,y2,z2),data, method ='linear')
+
+
+
+
+#print('min z...', np.min(z))
+#print('max z...', np.max(z))
+#print('min z2...', np.min(z2))
+#print('max z2...', np.max(z2))
+#print('max(min(z,z2)', np.max(np.array([np.min(z),np.min(z2)])))
+#print('min(max(z,z2)', np.min(np.array([np.max(z),np.max(z2)])))
+
+print('IMPORTANT...it is required that the intersection of two cubes is/= O ')
+print('Explicit check is not done by the program ')
+# TO DO
+
+# This is for fixing the range of sampling point (info arises from the cube grid)
+nump = 40000   # Fix number of sampling points
+
+if (args.axis == 'z'):
+
+    
+     xmin = np.max(np.array([np.min(z),np.min(z2)])) 
+     xmax = np.min(np.array([np.max(z),np.max(z2)]))
+
+      
+
+     xpt1 = np.zeros(nump)
+     xpt2 = np.zeros(nump)
+     xpt3 = np.linspace(xmin,xmax,nump)
+     xpt  = xpt3
+
+elif (args.axis == 'y'):
+
+     xmin = np.max(np.array([np.min(y),np.min(y2)]))
+     xmax = np.min(np.array([np.max(y),np.max(y2)]))
+
+
+     xpt1 = np.zeros(nump)
+     xpt2 = np.linspace(xmin,xmax,nump) 
+     xpt3 = np.zeros(nump)
+     xpt  = xpt2
+
+elif (args.axis == 'x'):
+
+     xmin = np.max(np.array([np.min(x),np.min(x2)]))
+     xmax = np.min(np.array([np.max(x),np.max(x2)]))
+
+             
+     xpt1 = np.linspace(xmin,xmax,nump)
+     xpt2 = np.zeros(nump)
+     xpt3 = np.zeros(nump)
+     xpt  = xpt1
+
+print(('info... of sampling (nump, args.axis)', nump, args.axis))
+
+pts = np.transpose([xpt1,xpt2,xpt3])
+
+y1 = my_interpolating_function1(pts)
+y2 = my_interpolating_function2(pts)
 
 
 print('Interpol 1D..linear.')
@@ -113,15 +143,15 @@ except ValueError :
 
 
 if (args.axis == 'z'):
-      isodensity_value = my_interpolating_function([0.0,0.0,float(isodensity_point)])   
+      isodensity_value = my_interpolating_function2([0.0,0.0,float(isodensity_point)])   
       print(('isodensity_value=',isodensity_value))
 
 if (args.axis == 'y'):
-      isodensity_value = my_interpolating_function([0.0,float(isodensity_point),0.0])
+      isodensity_value = my_interpolating_function1([0.0,float(isodensity_point),0.0])
       print(('isodensity_value=',isodensity_value))
 
 if (args.axis == 'x'):
-      isodensity_value = my_interpolating_function([float(isodensity_point),0.0,0.0])
+      isodensity_value = my_interpolating_function1([float(isodensity_point),0.0,0.0])
       print(('isodensity_value=',isodensity_value))
 
 
