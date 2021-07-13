@@ -32,30 +32,30 @@ if args.verbose:
    print("verbosity turned on")  
 
 if args.verbose:
-  print('Reading...' + args.file[0])
+  print(('Reading...' + args.file[0]))
 
 if not (os.path.isfile(args.file[0])):
-    print "File ", args.file[0], " does not exist "
+    print("File ", args.file[0], " does not exist ")
     exit(1)
 
 totcube = load_cube.cube()
 totcube.readfile(args.file[0])
 
 if args.verbose:
-  print('Reading...' + args.file[1])
+  print(('Reading...' + args.file[1]))
 
 if not (os.path.isfile(args.file[1])):
-    print "File ", args.file[1], " does not exist "
+    print("File ", args.file[1], " does not exist ")
     exit(1)
 
 frag1cube = load_cube.cube()
 frag1cube.readfile(args.file[1])
 
 if args.verbose:
-  print('Reading...' + args.file[2])
+  print(('Reading...' + args.file[2]))
 
 if not (os.path.isfile(args.file[2])):
-    print "File ", args.file[2], " does not exist "
+    print("File ", args.file[2], " does not exist ")
     exit(1)
 
 frag2cube = load_cube.cube()
@@ -73,7 +73,7 @@ for i in range(len(totcube.get_rawdata())) :
 
 CTfrag1=partsum*dv
 
-print('Electronic Charge on frag1', CTfrag1)
+print(('Electronic Charge on frag1', CTfrag1))
 
 partsum = 0.
 for i in range(len(totcube.get_rawdata())) :
@@ -81,8 +81,8 @@ for i in range(len(totcube.get_rawdata())) :
          partsum += totcube.get_rawdata()[i]
 
 CTfrag2=partsum*dv
-print('Electronic Charge on frag2', CTfrag2)
-print('Expected error due to cube sampling', totcube.integrate())
+print(('Electronic Charge on frag2', CTfrag2))
+print(('Expected error due to cube sampling', totcube.integrate()))
 
 partsum = 0.
 for i in range(len(totcube.get_rawdata())) :
@@ -123,7 +123,7 @@ if (CTfrag1 > 0.00 ) :
 
 
 print('')
-print('Electronic Charge on frag1, CT = ', CTfrag1)
+print(('Electronic Charge on frag1, CT = ', CTfrag1))
 print('Note, a positive value means a charge accumulation in frag1')
 print('')
 
@@ -135,6 +135,6 @@ f.close()
 print('Density based descriptors for CT and polarization:details see JCTC,12, 1236 (2016)')
 print('Qtot = Qfrag1+Qfrag2+|CT|')
 print('')
-print("Qtot  = %f " % Qtot)
-print("Qfrag1= %f " % Qfrag1)
-print("Qfrag2= %f " % Qfrag2)
+print(("Qtot  = %f " % Qtot))
+print(("Qfrag1= %f " % Qfrag1))
+print(("Qfrag2= %f " % Qfrag2))

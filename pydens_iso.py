@@ -40,11 +40,11 @@ if (args.axis != 'z' and args.axis != 'y' and args.axis != 'x'):
    args.axis = 'z' 
    print('Problem with the axis definition, we set it to the default z value.')
 
-print('Reading...' + args.filefrag1)
+print(('Reading...' + args.filefrag1))
 mycube = load_cube.cube()
 
 if not (os.path.isfile(args.filefrag1)):
-    print "File ", args.filefrag1, " does not exist "
+    print("File ", args.filefrag1, " does not exist ")
     exit(1)
 
 mycube.readfile(args.filefrag1)
@@ -76,27 +76,27 @@ elif (args.axis == 'x'):
      xpt3 = np.zeros(nump)
      xpt  = xpt1
 
-print('info... of sampling (nump, args.axis)', nump, args.axis)
+print(('info... of sampling (nump, args.axis)', nump, args.axis))
 
-print('Interpolating...' + args.filefrag1)
+print(('Interpolating...' + args.filefrag1))
 my_interpolating_function = RegularGridInterpolator((x,y,z),data, method ='linear')
 #my_interpolating_function = RegularGridInterpolator((x,y,z),data, method ='nearest') 
 
 pts = np.transpose([xpt1,xpt2,xpt3])
 y1 = my_interpolating_function(pts)
 
-print('Reading...' + args.filefrag2)
+print(('Reading...' + args.filefrag2))
 mycube = load_cube.cube()
 
 if not (os.path.isfile(args.filefrag2)):
-    print "File ", args.filefrag2, " does not exist "
+    print("File ", args.filefrag2, " does not exist ")
     exit(1)
 
 mycube.readfile(args.filefrag2)
 x,y,z = np.array(mycube.get_grid_xyz())
 data = mycube.get_data()
 
-print('Interpolating...' + args.filefrag2)
+print(('Interpolating...' + args.filefrag2))
 my_interpolating_function = RegularGridInterpolator((x,y,z),data, method ='linear')
 y2 = my_interpolating_function(pts)
 
@@ -106,7 +106,7 @@ ydiff = (y2 - y1)**4
 fdiff = interp1d(xpt, ydiff, kind = 'linear')
 try:
     isodensity_point = fmin(fdiff,args.initialseed)  #  find a root Note that your stating point should be close to the final result
-    print('isodensity_point =',isodensity_point)
+    print(('isodensity_point =',isodensity_point))
 
 except ValueError :
     print('Oops problem in newton algorithm')
@@ -114,22 +114,22 @@ except ValueError :
 
 if (args.axis == 'z'):
       isodensity_value = my_interpolating_function([0.0,0.0,float(isodensity_point)])   
-      print('isodensity_value=',isodensity_value)
+      print(('isodensity_value=',isodensity_value))
 
 if (args.axis == 'y'):
       isodensity_value = my_interpolating_function([0.0,float(isodensity_point),0.0])
-      print('isodensity_value=',isodensity_value)
+      print(('isodensity_value=',isodensity_value))
 
 if (args.axis == 'x'):
       isodensity_value = my_interpolating_function([float(isodensity_point),0.0,0.0])
-      print('isodensity_value=',isodensity_value)
+      print(('isodensity_value=',isodensity_value))
 
 
 
 #print(args.outputiso)
 
 if os.path.exists(args.outputiso):
-    print "File ", args.outputiso, " exist, removing it "
+    print("File ", args.outputiso, " exist, removing it ")
     os.remove(args.outputiso)
 
 f = open(args.outputiso, 'w')
@@ -154,10 +154,10 @@ plt.xlabel('r (a.u)')
 outfilename = args.outputiso + ".eps"
 
 if os.path.exists(outfilename):
-    print "File ", outfilename, " exist, removing it "
+    print("File ", outfilename, " exist, removing it ")
     os.remove(outfilename)
 
-print "Dumping file ", outfilename
+print("Dumping file ", outfilename)
 plt.savefig(outfilename)
 #plt.show()
 
