@@ -127,7 +127,7 @@ if args.isodensitypoint is not None:
    ct = dq_interpolated(isovalue)
 
    f = open('CT_iso.dat',"a")
-   f.write("isovalue:%e  CT_iso:%e %s\n" % (isovalue, ct,args.file))
+   f.write("isovalue: %e  CT_iso: %e %s\n" % (isovalue, ct,args.file))
    f.close()
 
    plt.plot(isovalue, ct)

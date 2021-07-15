@@ -136,7 +136,7 @@ ydiff = (y2 - y1)**4
 fdiff = interp1d(xpt, ydiff, kind = 'linear')
 try:
     isodensity_point = fmin(fdiff,args.initialseed)  #  find a root Note that your stating point should be close to the final result
-    print(('isodensity_point =',isodensity_point))
+    print("isodensity_point = ", isodensity_point[0])
 
 except ValueError :
     print('Oops problem in newton algorithm')
