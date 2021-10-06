@@ -1,4 +1,11 @@
 # README #
+
+How to cite this:
+
+Matteo De Santis, Sergio Rampino, Loriano Storchi, Leonardo Belpassi, Francesco Tarantelli, "The Chemical Bond and s-d Hybridization in Coinage Metal(I) Cyanides", Inorganic Chemistry, DOI: 10.1021/acs.inorgchem.9b01694 (2019).
+
+De Santis M., Rampino S., Quiney H.M., Belpassi L., Storchi L. "Charge-displacement analysis via natural orbitals for chemical valence in the four-component relativistic framework", Journal of Chemical Theory and Computatio, DOI: 10.1021/acs.jctc.7b01077 (2018).
+
 # REQUIREMENTS#
 You need python, matplotlib, scipy  (Under Ubuntu: sudo apt install python-matplotlib; sudo apt install python-scipy)
 
