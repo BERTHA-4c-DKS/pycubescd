@@ -72,7 +72,7 @@ class cube(object):
       
       f = open(fname, u'r')
       
-      for i in xrange(2): 
+      for i in range(2): 
           f.readline() 
       
       line = f.readline().split() 
@@ -99,7 +99,7 @@ class cube(object):
               float(line[2]), \
               float(line[3])])
       
-      for i in xrange(self.__natoms):
+      for i in range(self.__natoms):
           line = f.readline().split()
           a = atom(int(line[0]), float(line[1]),  float(line[2]), \
                 float(line[3]),  float(line[4]))
@@ -322,9 +322,9 @@ class cube(object):
       for a in self.__atoms:
           unicode += a.get_str() + u"\n"
       
-      for ix in xrange(self.__nx):
-          for iy in xrange(self.__ny):
-              for iz in xrange(self.__nz):
+      for ix in range(self.__nx):
+          for iy in range(self.__ny):
+              for iz in range(self.__nz):
                    unicode += u"%.5e \n"% self.__data[ix,iy,iz]
       
       return unicode
@@ -349,12 +349,12 @@ class cube(object):
       newd = self.get_data()
       newd_raw = self.get_rawdata()
 
-      for i in xrange(len(newd_raw)):
+      for i in range(len(newd_raw)):
           newd_raw[i] += b.get_rawdata()[i]
 
-      for ix in xrange(self.__nx):
-          for iy in xrange(self.__ny):
-              for iz in xrange(self.__nz):
+      for ix in range(self.__nx):
+          for iy in range(self.__ny):
+              for iz in range(self.__nz):
                    newd[ix,iy,iz] += b.get_data()[ix,iy,iz] 
 
       retc.set_data(newd)
@@ -386,12 +386,12 @@ class cube(object):
       newd = self.get_data()
       newd_raw = self.get_rawdata()
 
-      for i in xrange(len(newd_raw)):
+      for i in range(len(newd_raw)):
           newd_raw[i] -= b.get_rawdata()[i]
 
-      for ix in xrange(self.__nx):
-          for iy in xrange(self.__ny):
-              for iz in xrange(self.__nz):
+      for ix in range(self.__nx):
+          for iy in range(self.__ny):
+              for iz in range(self.__nz):
                    newd[ix,iy,iz] -= b.get_data()[ix,iy,iz] 
 
       retc.set_data(newd)
@@ -423,13 +423,13 @@ class cube(object):
       newd = self.get_data()
       newd_raw = self.get_rawdata()
 
-      for i in xrange(len(newd_raw)):
+      for i in range(len(newd_raw)):
           newd_raw[i] = self.get_rawdata()[i] *\
                   b.get_rawdata()[i]
 
-      for ix in xrange(self.__nx):
-          for iy in xrange(self.__ny):
-              for iz in xrange(self.__nz):
+      for ix in range(self.__nx):
+          for iy in range(self.__ny):
+              for iz in range(self.__nz):
                    newd[ix,iy,iz] = self.get_data()[ix,iy,iz] * \
                            b.get_data()[ix,iy,iz] 
 
@@ -462,9 +462,9 @@ class cube(object):
       x = []
       y = []
       z = []
-      for i in xrange(self.__nx):
-         for j in xrange(self.__ny): 
-            for k in xrange(self.__nz):
+      for i in range(self.__nx):
+         for j in range(self.__ny): 
+            for k in range(self.__nz):
                 x.append(self.__origin[0] + i * self.__x[0])
                 y.append(self.__origin[1] + j * self.__y[1]) 
                 z.append(self.__origin[2] + k * self.__z[2]) 
@@ -479,13 +479,13 @@ class cube(object):
       y = []
       z = []
 
-      for i in xrange(self.__nx):
+      for i in range(self.__nx):
           x.append(self.__origin[0] + i * self.__x[0])
 
-      for j in xrange(self.__ny):
+      for j in range(self.__ny):
           y.append(self.__origin[1] + j * self.__y[1])
 
-      for k in xrange(self.__nz):
+      for k in range(self.__nz):
           z.append(self.__origin[2] + k * self.__z[2])
 
       return x, y, z
@@ -567,9 +567,9 @@ class cube(object):
       xval = numpy.zeros(dim)
       yval = numpy.zeros(dim)
       zval = numpy.zeros(dim)
-      for i in xrange(self.__nx):
-         for j in xrange(self.__ny): 
-            for k in xrange(self.__nz):
+      for i in range(self.__nx):
+         for j in range(self.__ny): 
+            for k in range(self.__nz):
                 x = self.__origin[0] + i * self.__x[0]
                 y = self.__origin[1] + j * self.__y[1] 
                 z = self.__origin[2] + k * self.__z[2] 
@@ -590,7 +590,7 @@ class cube(object):
       rv = []
 
       if axis == u"N":
-          for i in xrange(0, nstep):
+          for i in range(0, nstep):
               vals = trip[(dist >= r) & (dist < r + dr)]
               summa = 0.0
               for v in vals:
@@ -693,7 +693,7 @@ class cube(object):
           else:
               return None
 
-          for i in xrange(0, nstep):
+          for i in range(0, nstep):
               vals = newtrip[(newdist >= r) & (newdist < r + dr)]
               summa = 0.0
               for v in vals:
@@ -706,9 +706,9 @@ class cube(object):
   def spherical_intdr(self, center, r, dr):
 
       dist = []
-      for i in xrange(self.__nx):
-         for j in xrange(self.__ny): 
-            for k in xrange(self.__nz):
+      for i in range(self.__nx):
+         for j in range(self.__ny): 
+            for k in range(self.__nz):
                 x = self.__origin[0] + i * self.__x[0]
                 y = self.__origin[1] + j * self.__y[1] 
                 z = self.__origin[2] + k * self.__z[2] 
@@ -719,9 +719,9 @@ class cube(object):
       
       summa = 0.0
       a = 0
-      for i in xrange(self.__nx):
-         for j in xrange(self.__ny): 
-            for k in xrange(self.__nz):
+      for i in range(self.__nx):
+         for j in range(self.__ny): 
+            for k in range(self.__nz):
                 if (dist[a] >= r) and (dist[a] < (r+dr)):    
                     summa += self.__data[i,j,k]
                 a = a + 1
@@ -731,9 +731,9 @@ class cube(object):
   def spherical_int(self, center, diameter):
 
       dist = []
-      for i in xrange(self.__nx):
-         for j in xrange(self.__ny): 
-            for k in xrange(self.__nz):
+      for i in range(self.__nx):
+         for j in range(self.__ny): 
+            for k in range(self.__nz):
                 x = self.__origin[0] + i * self.__x[0]
                 y = self.__origin[1] + j * self.__y[1] 
                 z = self.__origin[2] + k * self.__z[2] 
@@ -744,9 +744,9 @@ class cube(object):
       
       summa = 0.0
       a = 0
-      for i in xrange(self.__nx):
-         for j in xrange(self.__ny): 
-            for k in xrange(self.__nz):
+      for i in range(self.__nx):
+         for j in range(self.__ny): 
+            for k in range(self.__nz):
                 if (dist[a] < diameter):    
                     summa += self.__data[i,j,k]
                 a = a + 1
@@ -759,17 +759,17 @@ class cube(object):
       m = 0 * self.__data
       ixmin = int(math.ceil((cx-r)/self.__x[0]))
       ixmax = int(math.floor((cx+r)/self.__x[0]))
-      for ix in xrange(ixmin, ixmax):
+      for ix in range(ixmin, ixmax):
           ryz = math.sqrt(r**2-(ix*self.__x[0]-cx)**2)
           iymin = int(math.ceil((cy-ryz)/self.__y[1]))
           iymax = int(math.floor((cy+ryz)/self.__y[1]))
         
-          for iy in xrange(iymin, iymax):
+          for iy in range(iymin, iymax):
               rz = math.sqrt(ryz**2 - (iy*self.__y[1]-cy)**2)
               izmin = int(math.ceil((cz-rz)/self.__z[2]))
               izmax = int(math.floor((cz+rz)/self.__z[2])) 
         
-              for iz in xrange (izmin, izmax):
+              for iz in range (izmin, izmax):
                   m[ix,iy,iz] = 1
         
       return m
