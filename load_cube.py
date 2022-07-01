@@ -1,5 +1,5 @@
-from __future__ import division
-from __future__ import absolute_import
+
+
 import numpy 
 import math
 import os
@@ -40,7 +40,7 @@ class atom(object):
     return self.__charge
 
   def get_str(self):
-    return u'%4d %10.6f %10.6f %10.6f %10.6f' % (self.__z, 
+    return '%4d %10.6f %10.6f %10.6f %10.6f' % (self.__z, 
         self.__charge, self.__coordinates[0], self.__coordinates[1],
         self.__coordinates[2])
 
@@ -49,7 +49,7 @@ class atom(object):
  
 class cube(object):
   
-  def __init__(self, fname=u""):
+  def __init__(self, fname=""):
 
       self.__atoms = []
       self.__natoms = 0
@@ -63,14 +63,14 @@ class cube(object):
       self.__y = numpy.zeros((1,1,1))
       self.__z = numpy.zeros((1,1,1))
 
-      if fname != u"":
+      if fname != "":
           self.readfile(fname)
 
   def readfile (self, fname):
 
       self.clear()
       
-      f = open(fname, u'r')
+      f = open(fname, 'r')
       
       for i in range(2): 
           f.readline() 
@@ -116,7 +116,7 @@ class cube(object):
               i += 1
       
       if i != self.__nx * self.__ny * self.__nz: 
-          raise SizeError(u"Errore while reading cube file")
+          raise SizeError("Errore while reading cube file")
 
 
   def clear(self):
@@ -200,100 +200,100 @@ class cube(object):
   def get_z(self):
       return self.__z
 
-  def cd (self, ax = u"x", fname=u""):
+  def cd (self, ax = "x", fname=""):
 
-      if ax == u"z":
+      if ax == "z":
           return self.cdz(fname)
-      elif ax == u"x":
+      elif ax == "x":
           return self.cdx(fname)
-      elif ax == u"y":
+      elif ax == "y":
           return self.cdy(fname)
  
-  def cdy (self, fname=u""):
+  def cdy (self, fname=""):
       cd = []
 
       ymin = self.get_origin()[1]
       dy = self.get_dy()
-      vals = self.integrate(u"y")
+      vals = self.integrate("y")
       i = 1 
       for v in vals:
           cd.append([ymin+(i-1)*dy, numpy.sum( vals[:i] ) * dy, v])
           i = i + 1
 
-      if fname != u"":
+      if fname != "":
          if os.path.exists(fname):
              os.remove(fname)
 
-         f = open(fname,u'w')
+         f = open(fname,'w')
 
          for i in cd:
-             f.write((u'%e %e %e \n') % (i[0], i[1], i[2]))
+             f.write(('%e %e %e \n') % (i[0], i[1], i[2]))
 
          f.close()
       
       return cd
 
-  def cdx (self, fname=u""):
+  def cdx (self, fname=""):
       cd = []
 
       xmin = self.get_origin()[0]
       dx = self.get_dx()
-      vals = self.integrate(u"x")
+      vals = self.integrate("x")
       i = 1
       for v in vals:
           cd.append([xmin+(i-1)*dx, numpy.sum( vals[:i] ) * dx, v])
           i = i + 1
 
-      if fname != u"":
+      if fname != "":
          if os.path.exists(fname):
              os.remove(fname)
 
-         f = open(fname,u'w')
+         f = open(fname,'w')
 
          for i in cd:
-             f.write((u'%e %e %e \n') % (i[0], i[1], i[2]))
+             f.write(('%e %e %e \n') % (i[0], i[1], i[2]))
 
          f.close()
        
       return cd
 
-  def cdz (self, fname=u""):
+  def cdz (self, fname=""):
       cd = []
 
       zmin = self.get_origin()[2]
       dz = self.get_dz()
-      vals = self.integrate(u"z")
+      vals = self.integrate("z")
       i = 1 
       for v in vals:
           cd.append([zmin+(i-1)*dz, numpy.sum( vals[:i] ) * dz, v])
           i = i + 1
 
-      if fname != u"":
+      if fname != "":
          if os.path.exists(fname):
              os.remove(fname)
 
-         f = open(fname,u'w')
+         f = open(fname,'w')
 
          for i in cd:
-             f.write((u'%e %e %e \n') % (i[0], i[1], i[2]))
+             f.write(('%e %e %e \n') % (i[0], i[1], i[2]))
 
          f.close()
        
       return cd
 
-  def integrate (self, axis=u""):
+  def integrate (self, axis=""):
 
-      if axis == u"":
+      if axis == "":
           itgr = numpy.sum(self.__data) * self.get_dx() * self.get_dy() * \
                   self.get_dz()
           return itgr
-      elif axis == u"z":
+      elif axis == "z":
           itgr = numpy.sum(self.__data, axis=(0,1)) * self.get_dx() * self.get_dy()
           return itgr
-      elif axis == u"x":
+      elif axis == "x":
           itgr = numpy.sum(self.__data, axis=(1,2)) * self.get_dy() * self.get_dz()
           return itgr
-      elif axis == u"y":
+      elif axis == "y":
           itgr = numpy.sum(self.__data, axis=(0,2)) * self.get_dx() * self.get_dz()
           return itgr
 
@@ -309,25 +309,25 @@ class cube(object):
 
   def get_str(self):
 
-      unicode = u"%4d %.6f %.6f %.6f\n" % \
+      str = "%4d %.6f %.6f %.6f\n" % \
               (self.__natoms, self.__origin[0], self.__origin[1], \
               self.__origin[2])
-      unicode += u"%4d %.6f %.6f %.6f\n"% \
+      str += "%4d %.6f %.6f %.6f\n"% \
               (self.__nx, self.__x[0], self.__x[1], self.__x[2])
-      unicode += u"%4d %.6f %.6f %.6f\n"% \
+      str += "%4d %.6f %.6f %.6f\n"% \
               (self.__ny, self.__y[0], self.__y[1], self.__y[2])
-      unicode += u"%4d %.6f %.6f %.6f\n"% \
+      str += "%4d %.6f %.6f %.6f\n"% \
               (self.__nz, self.__z[0], self.__z[1], self.__z[2])
 
       for a in self.__atoms:
-          unicode += a.get_str() + u"\n"
+          str += a.get_str() + "\n"
       
       for ix in range(self.__nx):
           for iy in range(self.__ny):
               for iz in range(self.__nz):
-                   unicode += u"%.5e \n"% self.__data[ix,iy,iz]
+                   str += "%.5e \n"% self.__data[ix,iy,iz]
       
-      return unicode
+      return str
 
   def __add__ (self, b):
 
@@ -337,7 +337,7 @@ class cube(object):
          (self.get_origin()[0] != b.get_origin()[0]) or \
          (self.get_origin()[1] != b.get_origin()[1]) or \
          (self.get_origin()[2] != b.get_origin()[2]):
-        raise SizeError(u"cubes are not compatible")
+        raise SizeError("cubes are not compatible")
       
       retc = cube()
 
@@ -374,7 +374,7 @@ class cube(object):
          (self.get_origin()[0] != b.get_origin()[0]) or \
          (self.get_origin()[1] != b.get_origin()[1]) or \
          (self.get_origin()[2] != b.get_origin()[2]):
-        raise SizeError(u"cubes are not compatible")
+        raise SizeError("cubes are not compatible")
       
       retc = cube()
 
@@ -411,7 +411,7 @@ class cube(object):
          (self.get_origin()[0] != b.get_origin()[0]) or \
          (self.get_origin()[1] != b.get_origin()[1]) or \
          (self.get_origin()[2] != b.get_origin()[2]):
-        raise SizeError(u"cubes are not compatible")
+        raise SizeError("cubes are not compatible")
       
       retc = cube()
 
@@ -444,20 +444,20 @@ class cube(object):
 
   def __repr__ (self):
 
-      unicode = u"cube file\ngenerated\n"
-      unicode += self.get_str()
+      str = "cube file\ngenerated\n"
+      str += self.get_str()
       
-      return unicode
+      return str
 
   def dump(self, f):
 
-      print >>f, u"cube file\ngenerated"
-      print >>f, self.get_str()
+      print("cube file\ngenerated", file=f)
+      print(self.get_str(), file=f)
 
-  def to_xyz (self, fname = u"toXYZ.out"):
+  def to_xyz (self, fname = "toXYZ.out"):
 
       temp = numpy.reshape(self.__rawdata, \
-              (self.__nx*self.__ny*self.__nz), order=u'C')
+              (self.__nx*self.__ny*self.__nz), order='C')
   
       x = []
       y = []
@@ -471,7 +471,7 @@ class cube(object):
                 ss = x, y, z, temp
                 aa = numpy.transpose(ss)
 
-      numpy.savetxt(fname, aa, fmt=u'%e', newline=u'\n')
+      numpy.savetxt(fname, aa, fmt='%e', newline='\n')
   
   def get_grid_xyz(self):
 
@@ -508,7 +508,7 @@ class cube(object):
 
       return zmin, zmax
 
-  def get_enclosed_r (self, center, axis=u"N"):
+  def get_enclosed_r (self, center, axis="N"):
 
       x = center[0]
       y = center[1]
@@ -521,31 +521,31 @@ class cube(object):
       if (x < xmax) and (x > xmin):
           if (y > ymin) and (y < ymax):
               if (z > zmin) and (z < zmax):
-                  if axis == u"N":
+                  if axis == "N":
                       rx = min(x - xmin, xmax - x)
                       ry = min(y - ymin, ymax - y)
                       rz = min(z - zmin, zmax - z)
-                  elif axis == u"z":
+                  elif axis == "z":
                       rx = min(x - xmin, xmax - x)
                       ry = min(y - ymin, ymax - y)
                       rz = zmax - z
-                  elif axis == u"mz":
+                  elif axis == "mz":
                       rx = min(x - xmin, xmax - x)
                       ry = min(y - ymin, ymax - y)
                       rz = z - zmin
-                  elif axis == u"y":
+                  elif axis == "y":
                       rx = min(x - xmin, xmax - x)
                       ry = ymax - y
                       rz = min(z - zmin, zmax - z)
-                  elif axis == u"my":
+                  elif axis == "my":
                       rx = min(x - xmin, xmax - x)
                       ry = y - ymin
                       rz = min(z - zmin, zmax - z)
-                  elif axis == u"x":
+                  elif axis == "x":
                       rx = xmax - x
                       ry = min(y - ymin, ymax - y)
                       rz = min(z - zmin, zmax - z)
-                  elif axis == u"mx":
+                  elif axis == "mx":
                       rx = x - xmin
                       ry = min(y - ymin, ymax - y)
                       rz = min(z - zmin, zmax - z)
@@ -554,7 +554,7 @@ class cube(object):
 
       return None
 
-  def spherical_int_rdr(self, center, rmax, dr, axis=u"N", angle=180):
+  def spherical_int_rdr(self, center, rmax, dr, axis="N", angle=180):
 
       nstep = int(rmax/dr) - 1
 
@@ -589,7 +589,7 @@ class cube(object):
       r = 0.0
       rv = []
 
-      if axis == u"N":
+      if axis == "N":
           for i in range(0, nstep):
               vals = trip[(dist >= r) & (dist < r + dr)]
               summa = 0.0
@@ -600,7 +600,7 @@ class cube(object):
       else:
           newdist = dist
           newtrip = trip
-          if axis == u"x":
+          if axis == "x":
               if angle >= 90:
                   newdist = dist[( xval > center[0])]
                   newtrip = trip[( xval > center[0])]
@@ -615,7 +615,7 @@ class cube(object):
 
                   newdist = dist[( xval > 0.0) & (angles <= angle)]
                   newtrip = trip[( xval > 0.0) & (angles <= angle)]
-          elif axis == u"mx":
+          elif axis == "mx":
               if angle >= 90 :
                   newdist = dist[( xval < center[0])]
                   newtrip = trip[( xval < center[0])]
@@ -630,7 +630,7 @@ class cube(object):
 
                   newdist = dist[( xval < 0.0) & (angles <= angle)]
                   newtrip = trip[( xval < 0.0) & (angles <= angle)]
-          elif axis == u"y":
+          elif axis == "y":
               if angle >= 90 :
                   newdist = dist[( yval > center[1])]
                   newtrip = trip[( yval > center[1])]
@@ -645,7 +645,7 @@ class cube(object):
 
                   newdist = dist[( yval > 0.0) & (angles <= angle)]
                   newtrip = trip[( yval > 0.0) & (angles <= angle)]
-          elif axis == u"my":
+          elif axis == "my":
               if angle >= 90 :
                   newdist = dist[( yval < center[1])]
                   newtrip = trip[( yval < center[1])]
@@ -660,7 +660,7 @@ class cube(object):
 
                   newdist = dist[( yval < 0.0) & (angles <= angle)]
                   newtrip = trip[( yval < 0.0) & (angles <= angle)]
-          elif axis == u"z":
+          elif axis == "z":
               if angle >= 90 :
                   newdist = dist[( zval > center[2])]
                   newtrip = trip[( zval > center[2])]
@@ -675,7 +675,7 @@ class cube(object):
 
                   newdist = dist[( zval > 0.0) & (angles <= angle)]
                   newtrip = trip[( zval > 0.0) & (angles <= angle)]
-          elif axis == u"mz":
+          elif axis == "mz":
               if angle >= 90 :
                   newdist = dist[( zval < center[2])]
                   newtrip = trip[( zval < center[2])]
