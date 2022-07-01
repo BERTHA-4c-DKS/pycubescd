@@ -41,10 +41,10 @@ if (args.axis != 'z' and args.axis != 'y' and args.axis != 'x'):
     print('Problem with the axis definition, we set it to the default z value.')
 
 if not (os.path.isfile(args.file)):
-    print "File ", args.file, " does not exist "
+    print("File ", args.file, " does not exist ")
     exit(1)
 
-print('Reading ' + args.file)
+print(('Reading ' + args.file))
 mycube = load_cube.cube()
 mycube.readfile (args.file)
 
@@ -54,10 +54,10 @@ if outfilename == "":
     outfilename = args.file + "_cd" +args.axis + ".txt"
 
 if os.path.exists(outfilename):
-    print "File ", outfilename, " exist, removing it "
+    print("File ", outfilename, " exist, removing it ")
     os.remove(outfilename)
 
-print "Writing ... " + outfilename
+print("Writing ... " + outfilename)
 
 dd = 0.0
 if (args.axis == 'z'):
@@ -96,7 +96,7 @@ if args.cut != None:
                 y.append(newval)
 
         if howmanypoints > 1:
-            print "Only one point can be cut"
+            print("Only one point can be cut")
             eixt(1)
 
         idx = idx + 1
@@ -153,4 +153,4 @@ if args.cut != None:
 
 integral = mycube.integrate()
 
-print "Integral value: ", integral
+print("Integral value: ", integral)
