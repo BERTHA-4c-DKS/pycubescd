@@ -36,41 +36,41 @@ if (args.axis != 'z' and args.axis != 'y' and args.axis != 'x'):
    args.axis = 'z' 
    print('Problem with the axis definition, we set it to the default z value.')
 
-print('Reading...' + args.filetot)
+print(('Reading...' + args.filetot))
 
 if not (os.path.isfile(args.filetot)):
-    print "File ", args.filetot, " does not exist "
+    print("File ", args.filetot, " does not exist ")
     exit(1)
 
 totcube = load_cube.cube()
 totcube.readfile(args.filetot)
 
-print('Reading...' + args.filefrag1)
+print(('Reading...' + args.filefrag1))
 
 if not (os.path.isfile(args.filefrag1)):
-    print "File ", args.filefrag1, " does not exist "
+    print("File ", args.filefrag1, " does not exist ")
     exit(1)
 
 frag1cube = load_cube.cube()
 frag1cube.readfile(args.filefrag1)
 
-print('Reading...' + args.filefrag2)
+print(('Reading...' + args.filefrag2))
 
 if not (os.path.isfile(args.filefrag2)):
-    print "File ", args.filefrag2, " does not exist "
+    print("File ", args.filefrag2, " does not exist ")
     exit(1)
 
 frag2cube = load_cube.cube()
 frag2cube.readfile(args.filefrag2)
 
 if args.verbose:
-    print "Performing the cube operation totcube - frag1cube - frag2cube"
+    print("Performing the cube operation totcube - frag1cube - frag2cube")
 
 mycube = totcube - frag1cube - frag2cube
 outfilename = "cd" + args.axis + ".out"
 
 if os.path.exists(outfilename):
-    print "File ", outfilename, " exist, removing it "
+    print("File ", outfilename, " exist, removing it ")
     os.remove(outfilename)
 
 
@@ -84,7 +84,7 @@ if (args.axis == 'x'):
             cddata = mycube.cdx(outfilename)
 
 
-print(type(args.isodensitypoint))
+print((type(args.isodensitypoint)))
 
 x = np.transpose(np.array(cddata))[0]
 y = np.transpose(np.array(cddata))[1]
@@ -94,11 +94,11 @@ if args.isodensitypoint is not None:
    from scipy.interpolate import interp1d
    dq_interpolated = interp1d(x, y, kind = 'cubic')
    ct = dq_interpolated(isovalue)
-   print(isovalue,ct)
+   print((isovalue,ct))
    dq_interpolated = interp1d(x, y, kind = 'linear')
    ct = dq_interpolated(isovalue)
    plt.plot(isovalue,ct)
-   print(isovalue,ct)
+   print((isovalue,ct))
    text = '('+str(isovalue)+',' + str(ct) + ')'
    plt.annotate(text, xy=(isovalue,ct), xytext=(isovalue+3.,ct), arrowprops=dict(facecolor='black', shrink=0.05))
    
@@ -108,10 +108,10 @@ outfilename = "cd" + str(args.axis) + ".eps"
 plt.plot(x,y)
 
 if os.path.exists(outfilename):
-    print "File ", outfilename, " exist, removing it "
+    print("File ", outfilename, " exist, removing it ")
     os.remove(outfilename)
 
-print "Dumping file ", outfilename
+print("Dumping file ", outfilename)
 plt.savefig(outfilename)
 #plt.show()
 
