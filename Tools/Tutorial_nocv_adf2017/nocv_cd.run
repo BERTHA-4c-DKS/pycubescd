@@ -1,13 +1,13 @@
 #!/bin/ksh
 
 SUBDIR=$PWD
-PYCD=/home/belp/Repository/pycubescd
+PYCD=/home/belp/Repository/pycubescd/PY3
 PBS_O_WORKDIR=$PWD
 echo $PWD
 
 
 
-. /home/belp/INSTALL/adf2017.109/adfrc.sh
+. /home/belp/INSTALL/adf2019.307/adfbashrc.sh
 
 export SCM_TMPDIR=/tmp
 export P4_GLOBMEMSIZE=8388608
@@ -107,7 +107,8 @@ fragments
 end
 
 ETSNOCV
-PRINT ETSLOWDIN
+End
+print etslowdin
 
 save TAPE41
 
@@ -270,5 +271,4 @@ cp C*   $PBS_O_WORKDIR
 cd $PBS_O_WORKDIR
 
 echo 'EXIT'
-exit 0
 
