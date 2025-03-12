@@ -1,0 +1,209 @@
+#! /bin/sh
+source /home/belp/INSTALL/ams2024.104/amsbashrc.sh
+export PYCD=/home/belp/Repository/pycubescd/PY3
+
+AMS_JOBNAME=frag1 $AMSBIN/ams -n 8 <<eor
+System
+  Atoms
+ U        0.0000      0.0000      0.0000
+ O        0.0900      1.7274     -0.0201
+ O       -0.0870     -1.7276     -0.0084
+  End
+  Charge 2
+End
+
+Task SinglePoint
+Engine ADF
+  Basis
+    Type TZ2P
+    Core Large
+  End
+  Relativity
+    Formalism ZORA
+    Level Scalar
+  End
+  Symmetry NOSYM
+  XC
+    GGA BP86
+  End
+  BeckeGrid
+    Quality Good
+  End
+EndEngine
+eor
+
+AMS_JOBNAME=frag2 $AMSBIN/ams -n 8 <<eor
+System
+  Atoms
+ O       -0.0010      0.0037     -3.7879
+ C       -0.0000     -0.0000     -2.6664
+  End
+  Charge 0
+End
+
+Task SinglePoint
+Engine ADF
+  Basis
+    Type TZ2P
+    Core Large
+  End
+  Relativity
+    Formalism ZORA
+    Level Scalar
+  End
+  Symmetry NOSYM
+  XC
+    GGA BP86
+  End
+  BeckeGrid
+    Quality Good
+  End
+EndEngine
+eor
+
+AMS_JOBNAME=complex $AMSBIN/ams -n 8 <<eor
+System
+  Atoms
+ O       -0.0010      0.0037     -3.7879   adf.f=frag2
+ C       -0.0000     -0.0000     -2.6664   adf.f=frag2
+ U        0.0000      0.0000      0.0000   adf.f=frag1
+ O        0.0900      1.7274     -0.0201   adf.f=frag1
+ O       -0.0870     -1.7276     -0.0084   adf.f=frag1
+  End
+  Charge 2
+End
+
+Task SinglePoint
+Engine ADF
+  title  bla bla
+!!  eprint
+!!    sfo eig ovl
+!!  end
+  ETSNOCV
+  enocv 0.005
+  End
+  fragments
+     frag1  frag1.results/adf.rkf
+     frag2  frag2.results/adf.rkf
+  end
+
+EndEngine
+eor
+
+"$AMSBIN"/densf << eor
+InputFile complex.results/adf.rkf
+CUBInput
+Density SumFrag                  ! We require the Sum of SCF densities of the isolated Fragments
+CUBOutput complex                ! Output is the file: complex%SumFrag%Density.cub
+Grid
+   -10.0 -10.0 -10.0
+   100  100  100
+   1.0 0.0 0.0 15.03
+   0.0 1.0 0.0 15.03
+   0.0 0.0 1.0 15.03
+End
+eor
+
+"$AMSBIN"/densf << eor
+InputFile complex.results/adf.rkf
+CUBInput
+Density SCF   ! We require the Sum of SCF densities of the isolated Fragments
+CUBOutput complex                ! Output is the file: complex%SCF%Density.cub
+Grid
+   -10.0 -10.0 -10.0
+   100  100  100
+   1.0 0.0 0.0 15.03
+   0.0 1.0 0.0 15.03
+   0.0 0.0 1.0 15.03
+End
+eor
+
+"$AMSBIN"/densf << eor
+InputFile complex.results/adf.rkf
+CUBInput
+NOCV
+THRESH 0.05
+END                     ! We require the Sum of SCF densities of the isolated Fragments
+CUBOutput complex                ! Output is the file: complex%SCF%Density.cub
+Grid
+   -10.0 -10.0 -10.0
+   100  100  100
+   1.0 0.0 0.0 15.03
+   0.0 1.0 0.0 15.03
+   0.0 0.0 1.0 15.03
+End
+eor
+
+echo 'DONE'
+
+################  Data for locating isodensity boundary   ##########
+
+echo 'Densf maps Density Frag1 in cube format'
+
+$ADFBIN/densf << eor     > infocube.out
+INPUTFILE frag1.results/adf.rkf
+CUBINPUT
+Density SCF
+CUBOUTPUT  frag1 ! Output is the file: frag1%SCF%Density.cub
+grid
+-7.279 -7.279 -7.279
+100  100  100
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03
+end
+end input
+eor
+
+echo 'Densf maps Density Frag2 in cube format'
+
+$ADFBIN/densf << eor     > infocube.out
+INPUTFILE frag2.results/adf.rkf
+CUBINPUT
+Density SCF
+CUBOUTPUT  frag2 ! Output is the file: frag2%SCF%Density.cub
+grid
+-7.279 -7.279 -7.279
+100  100  100
+1.0 0.0 0.0 15.03
+0.0 1.0 0.0 15.03
+0.0 0.0 1.0 15.03
+end
+end input
+eor
+
+echo 'pysub_cube.py to generate TOT - TOT_ORTH --> diff_totortho.cub'
+python3 $PYCD/pysub_cube.py -f1 complex%SCF%Density.cub  -f2 complex%SumFrag%Density.cub -o tot_diff_dens.cub
+echo 'DONE'
+
+
+echo 'pydens_iso.py to find isodensity value isoseed set to ' $isoseed
+isoseed=-1.0
+python3 $PYCD/pydens_iso.py -f1 frag1%SCF%Density.cub -f2 frag2%SCF%Density.cub -o_iso isofile  -iseed $isoseed
+isodat=`awk '{print $4}' isofile`
+echo 'isodat value ' $isodat
+
+echo 'pycd.py NOCV: tot_diff_dens.cub' 
+python3 $PYCD/pycd.py -f tot_diff_dens.cub  --isodensitypoint   $isodat
+
+a=`grep -4 'ETS-NOCV-decomposition: taken restricted  fragments' tot.out | tail -1 | awk '{print  $3}'`
+echo $a
+
+for i in 1 2 3 4   ; do
+echo 'pycd.py NOCV: ' $i
+
+b=`expr "$a" - "$i" + 1`
+
+python3 $PYCD/pyadd_cube.py  -f1 complex%NOCV%Densities_A_$i.cub -f2 complex%NOCV%Densities_A_$b.cub -o nocv$i.cub
+
+
+python3 $PYCD/pycd.py -f nocv$i.cub  --isodensitypoint   $isodat
+
+done
+
+rm *.cub
+
+
+
+
+
