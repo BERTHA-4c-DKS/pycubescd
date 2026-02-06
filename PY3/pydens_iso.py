@@ -143,7 +143,7 @@ except ValueError :
 
 
 if (args.axis == 'z'):
-      isodensity_value = my_interpolating_function2([0.0,0.0,float(isodensity_point)])   
+      isodensity_value = my_interpolating_function2([0.0,0.0,float(isodensity_point[0])])   
       print(('isodensity_value=',isodensity_value))
 
 if (args.axis == 'y'):
@@ -163,7 +163,7 @@ if os.path.exists(args.outputiso):
     os.remove(args.outputiso)
 
 f = open(args.outputiso, 'w')
-f.write(('Isodensity point at %f a.u. along axis %s Isodensity value of %f e/(a.u.)^3 \n') % (isodensity_point, args.axis, isodensity_value) )
+f.write(('Isodensity point at %f a.u. along axis %s Isodensity value of %f e/(a.u.)^3 \n') % (isodensity_point[0], args.axis, isodensity_value) )
 f.close()
 
 #plt.plot(xpt,ydiff)
